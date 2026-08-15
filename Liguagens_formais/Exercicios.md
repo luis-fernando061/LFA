@@ -1884,36 +1884,36 @@ Antes de avançar para a próxima aula, verifique se você consegue explicar:
 
 
 
-* [ ] O que é um **alfabeto `Σ`**; conjunto finito de símbolos.
+* [x] O que é um **alfabeto `Σ`**; conjunto finito de símbolos.
 
-* [ ] O que é uma **cadeia**; sequência finita de símbolos do alfabeto
+* [x] O que é uma **cadeia**; sequência finita de símbolos do alfabeto
 
-* [ ] O que significa **`ε`**; a palavra vazia, cadeia sem nenhum símbolo.
+* [x] O que significa **`ε`**; a palavra vazia, cadeia sem nenhum símbolo.
 
-* [ ] Por que **`|ε| = 0`**;  porque o comprimento conta símbolos, e ela não tem nenhum. Não é espaço em branco: é ausência de símbolo.
+* [x] Por que **`|ε| = 0`**;  porque o comprimento conta símbolos, e ela não tem nenhum. Não é espaço em branco: é ausência de símbolo.
 
-* [ ] O que é um **prefixo**;  pedaço que começa no início da palavra.
+* [x] O que é um **prefixo**;  pedaço que começa no início da palavra.
 
-* [ ] O que é um **sufixo**;  pedaço que termina no final da palavra.
+* [x] O que é um **sufixo**;  pedaço que termina no final da palavra.
 
-* [ ] O que significa **`Σ*`**;  conjunto de todas as cadeias finitas formadas com símbolos de Σ, incluindo ε.
+* [x] O que significa **`Σ*`**;  conjunto de todas as cadeias finitas formadas com símbolos de Σ, incluindo ε.
 
-* [ ] Se `Σ*` possui limite de tamanho;   não. O conjunto é infinito, mas cada cadeia dentro dele tem tamanho finito.
+* [x] Se `Σ*` possui limite de tamanho;   não. O conjunto é infinito, mas cada cadeia dentro dele tem tamanho finito.
 
-* [ ] O que é uma **linguagem formal `L`**;  um conjunto de cadeias sobre um alfabeto. Pode ser finita ou infinita.
+* [x] O que é uma **linguagem formal `L`**;  um conjunto de cadeias sobre um alfabeto. Pode ser finita ou infinita.
 
-* [ ] O que significa **`L ⊆ Σ*`**;  L é subconjunto de Σ*: toda palavra de L tem que ser formada só com símbolos do alfabeto.
+* [x] O que significa **`L ⊆ Σ*`**;  L é subconjunto de Σ*: toda palavra de L tem que ser formada só com símbolos do alfabeto.
 
-* [ ] O que é uma **gramática formal**;   quádrupla G = (N, Σ, P, S) com regras que geram as palavras da linguagem.
+* [x] O que é uma **gramática formal**;   quádrupla G = (N, Σ, P, S) com regras que geram as palavras da linguagem.
 
-* [ ] O que são **terminais e não terminais**;  terminais são os símbolos que aparecem na palavra final (a, b); não terminais são variáveis auxiliares que precisam ser substituídas (S).
+* [x] O que são **terminais e não terminais**;  terminais são os símbolos que aparecem na palavra final (a, b); não terminais são variáveis auxiliares que precisam ser substituídas (S).
 
-* [ ] O que é uma **regra de produção**; regra que diz como substituir um símbolo por outro. Ex.: S → aS.
+* [x] O que é uma **regra de produção**; regra que diz como substituir um símbolo por outro. Ex.: S → aS.
 S → aS | ε — "S produz aS ou ε". O | significa OU.
 
-* [ ] Como ler **`S → aS | ε`; `S → aS | ε`; → "S produz `aS` **ou** `ε`". O `|` significa OU.
+* [x] Como ler **`S → aS | ε`; `S → aS | ε`; → "S produz `aS` **ou** `ε`". O `|` significa OU.
 
-* [ ] Como gerar palavras usando uma gramática. parte do símbolo inicial e vai aplicando as produções até sobrarem só terminais. Ex.: `S → aS → aε → a`.
+* [x] Como gerar palavras usando uma gramática. parte do símbolo inicial e vai aplicando as produções até sobrarem só terminais. Ex.: `S → aS → aε → a`.
 
 
 
