@@ -82,11 +82,11 @@ $$
 
 Responda:
 
-1. Quantos símbolos existem no alfabeto?
-2. Quais são os símbolos?
-3. O símbolo `a` pertence ao alfabeto?
-4. O símbolo `d` pertence ao alfabeto?
-5. Escreva uma palavra formada por símbolos desse alfabeto.
+1. Quantos símbolos existem no alfabeto? 3
+2. Quais são os símbolos? a,b,c 
+3. O símbolo `a` pertence ao alfabeto? Sim 
+4. O símbolo `d` pertence ao alfabeto? Não 
+5. Escreva uma palavra formada por símbolos desse alfabeto. bca
 
 ---
 
@@ -207,11 +207,11 @@ Classifique cada sequência como **palavra válida** ou **não válida**:
 
 | Sequência | Válida? | Justificativa |
 | --------- | ------- | ------------- |
-| `0101`    |         |               |
-| `00110`   |         |               |
-| `012`     |         |               |
-| `111`     |         |               |
-| `10a`     |         |               |
+| `0101`    | Válida  |               |
+| `00110`   | Válida  |               |
+| `012`     |         | Não válida    |
+| `111`     | Válida  |               |
+| `10a`     |         | Não válida    |
 
 ---
 
@@ -1718,28 +1718,41 @@ Responda sem consultar o gabarito:
 
 A palavra `b` pode ser gerada?
 
+Sim. Basta aplicar a regra S -> B direto.
+
 ### 2.
 
 A palavra `ab` pode ser gerada?
+
+Sim.
+Derivação: S-> aS -> ab
 
 ### 3.
 
 A palavra `aab` pode ser gerada?
 
+Sim.
+Derivação: S -> aS -> aaS ->aab
 ### 4.
 
 A palavra `aaab` pode ser gerada?
+Sim.
+Derivação: S -> aS -> aaS -> aaaS -> aaab
 
 ### 5.
 
 A palavra `aba` pode ser gerada?
 
+Não. Quando usamos a regra S -> b, o não terminal S é substituído e a derivação encerra. Por isso, não dá para colocar nenhum $a$ depois do b.
+
 ### 6.
 
 Escreva a derivação completa de `aaaab`.
-
+S -> aS -> aaS -> aaaS -> aaaaS -> aaaab 
 ### 7.
 
 Descreva, com suas palavras, o padrão das palavras geradas por essa gramática.
+
+Essa gramática gera qualquer quantidade de letras a seguidas obrigatoriamente por uma única letra b no final.
 
 > **Dica:** observe o que acontece quando aplicamos várias vezes $S\rightarrow aS$ e, finalmente, utilizamos $S\rightarrow b$.
