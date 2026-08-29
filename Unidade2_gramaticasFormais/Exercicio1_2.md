@@ -207,11 +207,11 @@ Classifique cada sequência como **palavra válida** ou **não válida**:
 
 | Sequência | Válida? | Justificativa |
 | --------- | ------- | ------------- |
-| `0101`    | Válida  |               |
-| `00110`   | Válida  |               |
-| `012`     |         | Não válida    |
-| `111`     | Válida  |               |
-| `10a`     |         | Não válida    |
+| `0101`    | Sim  |   |	só usa 0 e 1      |
+| `00110`   | sim  |   |	só usa 0 e 1      |
+| `012`     | Não  |   | 2 ∉ Σ |
+| `111`     | sim  |   	só usa 0 e 1  |
+| `10a`     | Não  |    |	a ∉ Σ |
 
 ---
 
@@ -231,7 +231,9 @@ $$
 a \in \Sigma
 $$
 
-e se:
+
+
+e se: 0 ∈ Σ → V (é símbolo do alfabeto).
 
 $$
 ab \in \Sigma
@@ -239,13 +241,13 @@ $$
 
 ### Resolução
 
-Primeiro analisamos:
+Primeiro analisamos:1 ∈ Σ → V.
 
 $$
 a \in \Sigma
 $$
 
-O símbolo `a` está dentro do conjunto?
+O símbolo `a` está dentro do conjunto? 01 ∈ Σ → F (é palavra, não símbolo).
 
 Sim.
 
@@ -261,7 +263,7 @@ Agora observe:
 ab
 ```
 
-`ab` possui dois símbolos:
+`ab` possui dois símbolos: 2 ∈ Σ → F (não está no alfabeto).
 
 ```text
 a b
@@ -269,7 +271,7 @@ a b
 
 Portanto, `ab` é uma **palavra**, e não um símbolo individual do alfabeto.
 
-Assim:
+Assim: 101 ∈ Σ* → V (todos os símbolos são do alfabeto).
 
 $$
 ab \notin \Sigma
