@@ -207,8 +207,8 @@ Classifique cada sequência como **palavra válida** ou **não válida**:
 
 | Sequência | Válida? | Justificativa |
 | --------- | ------- | ------------- |
-| `0101`    | Sim  |   |	só usa 0 e 1     |
-| `00110`   | sim  |   |	só usa 0 e 1     |
+| `0101`    | Sim  |   |	só usa 0 e 1  |
+| `00110`   | sim  |   |	só usa 0 e 1 |
 | `012`     | Não  |   | 2 ∉ Σ |
 | `111`     | sim  |   	só usa 0 e 1  |
 | `10a`     | Não  |    |	a ∉ Σ |
@@ -553,10 +553,16 @@ L = {b^n \mid n \geq 1}
 $$
 
 1. Escreva as cinco primeiras palavras.
+     b, bb, bbb, bbbb, bbbbb
+     
 2. Explique o significado de $b^n$.
+     bⁿ = n ocorrências do símbolo b.
+     
 3. A palavra `bbbbbb` pertence à linguagem?
-4. A palavra vazia ($\varepsilon$) pertence à linguagem?
+     Sim, bbbbbb = b⁶ ∈ L.
 
+4. A palavra vazia ($\varepsilon$) pertence à linguagem?
+     Não, ε ∉ L, porque a condição exige n ≥ 1.
 ---
 
 # 6. Linguagem vazia e palavra vazia
@@ -660,9 +666,13 @@ $$
 Depois responda:
 
 1. Qual delas possui uma palavra?
+  B possui uma palavra.
+  
 2. Qual delas não possui nenhuma palavra?
-3. Qual é o comprimento da palavra $\varepsilon$?
+  A não possui nenhuma.
 
+3. Qual é o comprimento da palavra $\varepsilon$?
+   |ε| = 0.
 ---
 
 # 7. Estrutura de uma gramática
@@ -768,10 +778,19 @@ $$
 Identifique:
 
 1. O conjunto de variáveis.
+V = {S, A}
+
 2. O conjunto de terminais.
+T = {0, 1}
+
 3. O conjunto de produções.
+P = {S → 0A, A → 1}
+
 4. O símbolo inicial.
+Símbolo inicial: S
+
 5. Qual palavra pode ser gerada por essa gramática?
+Palavra gerada: 01 (S ⇒ 0A ⇒ 01) — é a única.
 
 ---
 
@@ -868,10 +887,16 @@ $$
 Começando com $S$:
 
 1. Aplique a regra uma vez.
-2. Aplique a regra duas vezes.
-3. Aplique a regra três vezes.
-4. Escreva a sequência completa de derivação.
+Uma vez: S ⇒ 0S
 
+2. Aplique a regra duas vezes.
+Duas vezes: 0S ⇒ 00S
+
+3. Aplique a regra três vezes.
+Três vezes: 0S ⇒ 00S ⇒ 000S
+
+4. Escreva a sequência completa de derivação.
+Completa: S ⇒ 0S ⇒ 00S ⇒ 000S
 ---
 
 # 9. Derivação completa de uma palavra
@@ -1013,6 +1038,8 @@ aaab
 $$
 
 **Escreva todos os passos da derivação.**
+
+S ⇒ aS ⇒ aaS ⇒ aaaS ⇒ aaab
 
 ---
 
@@ -1164,12 +1191,12 @@ $$
 
 Determine se cada palavra pode ser gerada:
 
-1. `1`
-2. `01`
-3. `001`
-4. `0001`
-5. `101`
-6. `1001`
+1. `1` Sim: S ⇒ 1
+2. `01` Sim: S ⇒ 0S ⇒ 01
+3. `001`  Sim: S ⇒ 0S ⇒ 00S ⇒ 001
+4. `0001`  Sim: S ⇒ 0S ⇒ 00S ⇒ 000S ⇒ 0001
+5. `101` Não: depois de S → 1 a derivação encerra.
+6. `1001` Não têm o formato 0 para 01.
 
 Para as palavras que podem ser geradas, apresente a derivação completa.
 
@@ -1686,19 +1713,19 @@ A palavra `1001` começa com `1` e depois possui outros símbolos, o que não é
 
 Antes de avançar para os próximos conteúdos, verifique se você consegue:
 
-* [ ] Explicar o que é um alfabeto.
-* [ ] Identificar os símbolos de um alfabeto.
-* [ ] Diferenciar símbolo de palavra.
-* [ ] Explicar o que é uma linguagem.
-* [ ] Verificar se uma palavra pertence a uma linguagem.
-* [ ] Interpretar $\Sigma^*$.
-* [ ] Diferenciar $\emptyset$ de $\varepsilon$.
-* [ ] Interpretar $w\in L$.
-* [ ] Identificar os componentes de uma gramática.
-* [ ] Ler uma regra como $S\rightarrow aS$.
-* [ ] Realizar uma derivação passo a passo.
-* [ ] Identificar quando uma derivação termina.
-* [ ] Determinar se uma palavra pode ser gerada por uma gramática.
+* [x] Explicar o que é um alfabeto.
+* [x] Identificar os símbolos de um alfabeto.
+* [x] Diferenciar símbolo de palavra.
+* [x] Explicar o que é uma linguagem.
+* [x] Verificar se uma palavra pertence a uma linguagem.
+* [x] Interpretar $\Sigma^*$.
+* [x] Diferenciar $\emptyset$ de $\varepsilon$.
+* [x] Interpretar $w\in L$.
+* [x] Identificar os componentes de uma gramática.
+* [x] Ler uma regra como $S\rightarrow aS$.
+* [x] Realizar uma derivação passo a passo.
+* [x] Identificar quando uma derivação termina.
+* [x] Determinar se uma palavra pode ser gerada por uma gramática.
 
 ---
 
