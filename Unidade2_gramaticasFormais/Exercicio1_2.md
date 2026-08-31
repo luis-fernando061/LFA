@@ -207,8 +207,8 @@ Classifique cada sequência como **palavra válida** ou **não válida**:
 
 | Sequência | Válida? | Justificativa |
 | --------- | ------- | ------------- |
-| `0101`    | Sim  |   |	só usa 0 e 1      |
-| `00110`   | sim  |   |	só usa 0 e 1      |
+| `0101`    | Sim  |   |	só usa 0 e 1     |
+| `00110`   | sim  |   |	só usa 0 e 1     |
 | `012`     | Não  |   | 2 ∉ Σ |
 | `111`     | sim  |   	só usa 0 e 1  |
 | `10a`     | Não  |    |	a ∉ Σ |
