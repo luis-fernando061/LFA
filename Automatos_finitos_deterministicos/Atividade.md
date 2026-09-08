@@ -11,9 +11,9 @@
 
 | Campo | Preenchimento |
 |---|---|
-| Turma | |
-| Data | |
-| Integrante 1 | |
+| Turma | N1 |
+| Data | 08/09/2026|
+| Integrante 1 | Luis Fernando Vieira Borges |
 | Integrante 2 | |
 | Integrante 3 | |
 | Integrante 4 | |
