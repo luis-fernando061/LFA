@@ -655,7 +655,7 @@ Use o [Regex Learn Playground](https://regexlearn.com/playground) para testar a 
 ## Registro dos testes
 
 **Ferramenta:** <https://www.phpliveregex.com/> · **Função utilizada:** `preg_match`, aplicada linha a linha
-**Permalink:**  https://www.phpliveregex.com/p/Pzg  · **Evidências:** [preg_match](evidencias/preg_match.pdf) · [preg_grep](evidencias/preg_grep.pdf)
+**Permalink:**  https://www.phpliveregex.com/p/Pzg  · **Evidências:** [preg_match](preg_match.pdf) · [preg_grep](preg_grep.pdf)
 
 | # | Entrada | Esperado | Obtido | Regra verificada |
 |---|---|---|---|---|
