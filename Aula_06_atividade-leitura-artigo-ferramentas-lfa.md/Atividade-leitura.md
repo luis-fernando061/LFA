@@ -41,11 +41,11 @@ Registre suas anotações no quadro abaixo.
 
 | Elemento observado | Anotação do estudante | Página/seção |
 |---|---|---|
-| Problema educacional |  |  |
-| Contribuição das ferramentas |  |  |
-| Diferença entre ferramentas |  |  |
-| Limitação ou lacuna |  |  |
-| Afirmação para debate |  |  |
+| Problema educacional | A disciplina possui um enfoque essencialmente algébrico e abstrato, exigindo grande capacidade de raciocínio lógico, o que a torna uma atividade desafiadora para estudantes iniciantes.[cite: 1] | Seção 1. Introdução[cite: 1] |
+| Contribuição das ferramentas | Permitem ao aluno vivenciar os conceitos em ambientes de simulação, oferecendo uma estratégia didática alternativa (lúdica e visual) à algébrica para uma compreensão mais completa.[cite: 1] | Seção 1. Introdução[cite: 1] |
+| Diferença entre ferramentas | O método de uso varia: algumas ferramentas utilizam a manipulação de uma interface gráfica visual (cliques), enquanto outras utilizam habilidades análogas à programação (uso de código).[cite: 1] | Seção 4. Análise Comparativa das Ferramentas[cite: 1] |
+| Limitação ou lacuna | Os autores admitem que os testes práticos e a avaliação dessas ferramentas com os alunos nas disciplinas de LFA ainda não foram realizados.[cite: 1] | Seção 5. Conclusões[cite: 1] |
+| Afirmação para debate | "O uso de ludicidade, interfaces e mecanismos que aumentem a interatividade (...) permite melhor compreensão e um foco ampliado no real conhecimento".[cite: 1] | Seção 5. Conclusões[cite: 1] |
 
 ## Etapa 2 - Compreensão do artigo em grupo (20 minutos)
 
