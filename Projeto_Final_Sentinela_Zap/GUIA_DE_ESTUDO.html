@@ -8,13 +8,553 @@
  th{background:#e8f5f3} code{background:#f3f3f3;padding:1px 4px;border-radius:3px;font-size:12.5px}
  pre{background:#f6f8fa;padding:10px;border-radius:6px;overflow-x:auto;font-size:12px}
  blockquote{border-left:4px solid #25D366;margin:8px 0;padding:4px 12px;background:#f4fbf6}
- @media print{body{margin:0;font-size:11.5px} h2{page-break-after:avoid} table,pre{page-break-inside:avoid}}
+ h4{color:#075E54;margin:16px 0 4px} h3{margin-top:20px}
+ @media print{h2.quebra{page-break-before:always} h4{page-break-after:avoid} body{margin:0;font-size:11.5px} h2{page-break-after:avoid} table,pre{page-break-inside:avoid}}
 </style></head><body><h1>📘 Guia de Estudo: Sentinela Zap</h1>
 <blockquote>
 <p>Resumo para <strong>estudar e explicar o projeto na prova</strong>. Cada conceito das Aulas 12 e 13 aparece ligado a <strong>onde ele está no nosso projeto</strong>.</p>
+<p><strong>Como estudar:</strong> leia primeiro a <strong>Parte 0</strong>, que explica o sistema do zero, como para uma criança. Depois passe para as seções 1 a 10, que trazem os nomes técnicos que a professora vai cobrar.</p>
 </blockquote>
 <hr />
-<h2>1. O projeto em 30 segundos (para abrir qualquer resposta)</h2>
+<h2>0. COMECE AQUI: o sistema explicado do zero</h2>
+<h3>0.1 A ideia em uma história</h3>
+<p>Imagine que a Dona Marta tem um <strong>porteiro muito esperto</strong> no celular. Toda mensagem que chega passa por ele antes de ela responder. Ele faz três coisas, sempre na mesma ordem:</p>
+<ol>
+<li><strong>Olha a mensagem com uma lupa 🔍</strong> e anota as pistas. Tem link? Pede dinheiro? Pede código? Diz que trocou de número?</li>
+<li><strong>Dá um palpite 🤔</strong>: "acho que é <strong>golpe</strong>", "acho que é <strong>spam</strong>" ou "acho que é <strong>legítima</strong>". Ele aprendeu a palpitar vendo 150 mensagens de exemplo que já vinham com a resposta certa.</li>
+<li><strong>Consulta o livro de regras 📖</strong> e decide o que fazer: <strong>LIBERAR</strong>, <strong>VERIFICAR</strong>, <strong>SILENCIAR</strong>, <strong>ARQUIVAR</strong>, <strong>NÃO PAGAR AINDA</strong> ou <strong>BLOQUEAR E DENUNCIAR</strong>. Se faltar alguma informação, ele <strong>pergunta</strong> para a Dona Marta. No final, ele <strong>explica</strong> quais regras usou.</li>
+</ol>
+<p>Cada parte da história tem um nome técnico:</p>
+<table>
+<thead>
+<tr>
+<th>Na história</th>
+<th>Nome técnico</th>
+<th>Matéria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A lupa que acha pistas</td>
+<td><strong>Extração de atributos</strong> com <strong>AFD</strong> e <strong>expressões regulares</strong></td>
+<td>Linguagens Formais e Autômatos</td>
+</tr>
+<tr>
+<td>O palpite aprendido com exemplos</td>
+<td><strong>Árvore de decisão</strong>, um modelo de <strong>aprendizado supervisionado</strong></td>
+<td>Aprendizado de máquina (Aula 13)</td>
+</tr>
+<tr>
+<td>O livro de regras</td>
+<td><strong>Base de conhecimento</strong>: 18 regras SE…ENTÃO</td>
+<td>Sistemas especialistas (Aula 12)</td>
+</tr>
+<tr>
+<td>O porteiro lendo o livro e decidindo</td>
+<td><strong>Motor de inferência</strong></td>
+<td>Sistemas especialistas (Aula 12)</td>
+</tr>
+<tr>
+<td>O caderninho onde ele anota tudo</td>
+<td><strong>Memória de trabalho</strong></td>
+<td>Sistemas especialistas (Aula 12)</td>
+</tr>
+<tr>
+<td>"Eu decidi isso por causa daquilo"</td>
+<td><strong>Mecanismo de explicação</strong> ("Como?" e "Por quê?")</td>
+<td>Sistemas especialistas (Aula 12)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Frase para decorar:</strong> "A lupa acha as pistas, a árvore dá o palpite e as regras dão a decisão."</p>
+</blockquote>
+<h3>0.2 Palavras que você precisa entender</h3>
+<ul>
+<li><strong>Fato:</strong> uma informação sobre a mensagem, anotada no caderninho. Exemplo: <code>pede_dinheiro = sim</code>.</li>
+<li><strong>Fato do tipo sim/não (booleano):</strong> só pode ser <strong>verdadeiro</strong> (True) ou <strong>falso</strong> (False).</li>
+<li><strong>Regra:</strong> uma frase do tipo <strong>SE</strong> (condições) <strong>ENTÃO</strong> (conclusão). Exemplo: "SE pede código ENTÃO é clonagem".</li>
+<li><strong>Disparar uma regra:</strong> quando todas as condições do SE são verdadeiras, a regra "dispara" e o ENTÃO é anotado no caderninho.</li>
+<li><strong>Memória de trabalho:</strong> o caderninho com todos os fatos do caso que está sendo analisado.</li>
+<li><strong>Prioridade:</strong> quando várias regras podem disparar ao mesmo tempo, a de <strong>número maior fala primeiro</strong> (100, depois 95, depois 90, depois 50).</li>
+<li><strong>Refração:</strong> cada regra dispara <strong>no máximo uma vez</strong> e só se trouxer <strong>informação nova</strong> para o caderninho.</li>
+<li><strong>Desconhecido:</strong> é o que o sistema anota quando a pessoa responde <strong>"não sei"</strong>. "Não sei" é <strong>diferente</strong> de "não".</li>
+</ul>
+<h3>0.3 Etapa 1: a lupa (as pistas do texto)</h3>
+<p>Primeiro o texto é "limpo": tudo vira minúscula e os acentos são retirados ("Código" vira "codigo"). Depois a lupa procura <strong>14 pistas</strong>. O modelo usa as 14. As <strong>4 mais importantes</strong> viram fatos de sim/não para as regras:</p>
+<table>
+<thead>
+<tr>
+<th>Fato para as regras</th>
+<th>Pergunta que a lupa faz</th>
+<th>Como ela descobre</th>
+<th>Exemplo que dá <strong>sim</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tem_link</code></td>
+<td>Tem algum link?</td>
+<td>Um <strong>AFD</strong> lê cada palavra, letra por letra, e aceita se começa com <code>http://</code>, <code>https://</code> ou <code>www.</code></td>
+<td>"acesse <strong>https://banco-falso.site</strong>"</td>
+</tr>
+<tr>
+<td><code>pede_dinheiro</code></td>
+<td>A pessoa está <strong>pedindo</strong> dinheiro?</td>
+<td>Uma <strong>expressão regular</strong> procura um verbo de pedido (empresta, faz, manda, paga…) seguido, <strong>na mesma frase</strong>, de algo de dinheiro (pix, reais, R$, boleto…)</td>
+<td>"<strong>me faz um pix</strong> de 700 reais"</td>
+</tr>
+<tr>
+<td><code>pede_codigo</code></td>
+<td>Pede código, senha ou token?</td>
+<td>Expressão regular: "código de verificação", "manda o código", "token", "senha do banco"…</td>
+<td>"<strong>me passa o código</strong> que chegou no SMS"</td>
+</tr>
+<tr>
+<td><code>troca_numero</code></td>
+<td>Diz que trocou de número?</td>
+<td>Expressão regular: "troquei de número", "número novo", "celular quebrou", "perdi o chip"…</td>
+<td>"Oi mãe, <strong>troquei de número</strong>"</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>Detalhe importante:</strong> "<strong>já fiz o pix</strong>" <strong>não</strong> é pedido de dinheiro, porque não tem verbo de pedido antes do "pix". Já "<strong>me faz um pix</strong>" é pedido. É por isso que o atributo se chama <code>pedido_dinheiro</code> e não apenas "fala de dinheiro".</p>
+</blockquote>
+<p>As outras 10 pistas servem <strong>só para o palpite do modelo</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Pista</th>
+<th>O que conta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>qtd_links</code></td>
+<td>Quantos links existem (é o AFD contando)</td>
+</tr>
+<tr>
+<td><code>qtd_dinheiro</code></td>
+<td>Quantas palavras de dinheiro aparecem (pix, boleto, reais…), <strong>mesmo sem ser pedido</strong></td>
+</tr>
+<tr>
+<td><code>qtd_urgencia</code></td>
+<td>Palavras de pressa: urgente, agora, hoje, bloqueado, expira…</td>
+</tr>
+<tr>
+<td><code>qtd_promocional</code></td>
+<td>Palavras de propaganda: promoção, desconto, grátis, sorteio, cupom…</td>
+</tr>
+<tr>
+<td><code>qtd_corrente</code></td>
+<td>Palavras de corrente: compartilhe, repasse, encaminhe…</td>
+</tr>
+<tr>
+<td><code>qtd_dados_sensiveis</code></td>
+<td>Pedido de dados: CPF, senha, login, cadastro, endereço…</td>
+</tr>
+<tr>
+<td><code>qtd_institucional</code></td>
+<td>Fingir ser empresa: prezado cliente, sua conta, central, FGTS…</td>
+</tr>
+<tr>
+<td><code>qtd_chamada_acao</code></td>
+<td>Mandar fazer algo: clique, acesse, cadastre, confira, aproveite…</td>
+</tr>
+<tr>
+<td><code>qtd_tom_pessoal</code></td>
+<td>Tom de conhecido: oi, mãe, pai, amiga, mano, saudade…</td>
+</tr>
+<tr>
+<td><code>pct_maiusculas</code> e <code>qtd_exclamacoes</code></td>
+<td>Quanto a mensagem "grita": letras MAIÚSCULAS e pontos de exclamação</td>
+</tr>
+</tbody>
+</table>
+<h3>0.4 Etapa 2: o palpite (a árvore de decisão)</h3>
+<p>A árvore de decisão funciona como o jogo de <strong>"adivinhe em perguntas"</strong>. Ela aprendeu sozinha, com as <strong>112 mensagens de treino</strong>, quais perguntas separam melhor golpe, spam e legítima. Por exemplo: "tem pedido de dinheiro? Se sim, quantas palavras de urgência?". No fim das perguntas ela chega numa <strong>folha</strong>, que é o palpite.</p>
+<ul>
+<li>Ela foi testada com <strong>38 mensagens que nunca tinha visto</strong> e acertou <strong>76,3%</strong>.</li>
+<li>O palpite vira um fato no caderninho: <strong><code>previsao = golpe</code></strong>, <strong><code>spam</code></strong> ou <strong><code>legitima</code></strong>.</li>
+<li><strong>Esse é o ponto de integração</strong> entre o aprendizado de máquina e o sistema especialista: o palpite do modelo entra como <strong>fato</strong> nas regras.</li>
+</ul>
+<h3>0.5 As 2 perguntas que o sistema pode fazer para você</h3>
+<p>Algumas informações <strong>não estão no texto</strong>. Só a pessoa sabe. Por isso o sistema pergunta, mas <strong>só quando alguma regra precisa</strong> da resposta:</p>
+<table>
+<thead>
+<tr>
+<th>Fato</th>
+<th>Pergunta</th>
+<th>Respostas possíveis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>contato_salvo</code></td>
+<td>"O número que enviou a mensagem está salvo nos seus contatos?"</td>
+<td>sim / não / não sei</td>
+</tr>
+<tr>
+<td><code>confirmou_por_ligacao</code></td>
+<td>"Você ligou para o número ANTIGO/conhecido da pessoa e ela confirmou o pedido?"</td>
+<td>sim / não / não sei</td>
+</tr>
+</tbody>
+</table>
+<p>Junto com a pergunta, o sistema diz <strong>"Por quê?"</strong>: qual regra precisa daquela resposta. Exemplo: <em>"Pergunto porque a regra R07 precisa desse fato."</em></p>
+<h3>0.6 Etapa 3: as 18 regras, uma por uma</h3>
+<p>As regras são divididas em <strong>3 famílias</strong>. Pense nelas assim:</p>
+<table>
+<thead>
+<tr>
+<th>Família</th>
+<th>Regras</th>
+<th>Prioridade</th>
+<th>O que faz</th>
+<th>Comparação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🕵️ <strong>Detetives</strong></td>
+<td>R01 a R05</td>
+<td>100 (falam primeiro)</td>
+<td>Só <strong>anotam conclusões no caderninho</strong>. <strong>Não decidem</strong> a ação.</td>
+<td>O detetive junta pistas e escreve "isso é golpe do falso parente".</td>
+</tr>
+<tr>
+<td>🚨 <strong>Alarmes de golpe conhecido</strong></td>
+<td>R06 a R09</td>
+<td>95 e 90</td>
+<td><strong>Decidem a ação</strong> quando um golpe famoso foi reconhecido. <strong>Vencem o modelo.</strong></td>
+<td>O alarme de incêndio: se tocou, não importa o palpite de ninguém.</td>
+</tr>
+<tr>
+<td>🤝 <strong>Usam o palpite do modelo</strong></td>
+<td>R10 a R18</td>
+<td>50 (falam por último)</td>
+<td>Juntam o <strong>palpite</strong> + se o <strong>contato é salvo</strong> + se há <strong>sinal de risco</strong> e decidem.</td>
+<td>O juiz que ouve o palpite e o contexto antes de decidir.</td>
+</tr>
+</tbody>
+</table>
+<h4>🕵️ Família 1: os detetives (anotam fatos novos)</h4>
+<p><strong>R01: golpe do falso parente</strong></p>
+<ul>
+<li><strong>Regra:</strong> SE <code>troca_numero</code> = sim <strong>E</strong> <code>pede_dinheiro</code> = sim, ENTÃO anota <code>padrao_falso_parente</code> = sim.</li>
+<li><strong>Em palavras simples:</strong> se alguém diz que mudou de número <strong>e</strong> já pede dinheiro, é o golpe mais famoso do WhatsApp.</li>
+<li><strong>Exemplo:</strong> "Oi mãe, troquei de número. Me faz um pix de 700 reais agora?"</li>
+<li><strong>Por que existe:</strong> é o golpe da Dona Marta. Não tem link nem erro de português, então só uma regra de especialista pega com certeza.</li>
+<li><strong>Repare:</strong> precisa das <strong>duas</strong> condições. "Troquei de número, salva esse aqui" (sem pedir dinheiro) <strong>não</strong> dispara a R01. Esse é o <strong>teste negativo</strong>.</li>
+</ul>
+<p><strong>R02: clonagem de conta</strong></p>
+<ul>
+<li><strong>Regra:</strong> SE <code>pede_codigo</code> = sim, ENTÃO anota <code>padrao_clonagem</code> = sim.</li>
+<li><strong>Em palavras simples:</strong> se pedem o código que chegou por SMS, a senha do banco ou um token, querem roubar sua conta.</li>
+<li><strong>Exemplo:</strong> "Olá, sou do banco. Seu token expirou. Me informe o token."</li>
+<li><strong>Por que existe:</strong> orientação oficial do WhatsApp: <strong>nunca</strong> compartilhe o código. Nenhuma empresa séria pede isso.</li>
+</ul>
+<p><strong>R03: link é sinal de risco</strong></p>
+<ul>
+<li><strong>Regra:</strong> SE <code>tem_link</code> = sim, ENTÃO anota <code>sinal_risco</code> = sim.</li>
+<li><strong>Em palavras simples:</strong> link pode levar a site falso. Já é motivo para ficar atento.</li>
+</ul>
+<p><strong>R04: pedido de dinheiro é sinal de risco</strong></p>
+<ul>
+<li><strong>Regra:</strong> SE <code>pede_dinheiro</code> = sim, ENTÃO anota <code>sinal_risco</code> = sim.</li>
+<li><strong>Em palavras simples:</strong> pedir dinheiro é o objetivo final de quase todo golpe.</li>
+</ul>
+<p><strong>R05: sem link e sem pedido, não há sinal de risco</strong></p>
+<ul>
+<li><strong>Regra:</strong> SE <code>tem_link</code> = não <strong>E</strong> <code>pede_dinheiro</code> = não, ENTÃO anota <code>sinal_risco</code> = não.</li>
+<li><strong>Em palavras simples:</strong> se não tem link nem pedido de dinheiro, o golpista ainda não tem "por onde" roubar.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>O que é "sinal de risco"?</strong> É um fato <strong>intermediário</strong>, criado pelas regras R03, R04 e R05. Ele responde: "esta mensagem tem um caminho para o golpe acontecer (link ou pedido de dinheiro)?". Um fato criado por uma regra e usado por outra se chama <strong>fato derivado</strong>. Isso é <strong>encadeamento</strong>: uma regra prepara o terreno para a próxima.</p>
+<p>💡 <strong>E se tiver link E pedido de dinheiro?</strong> A R03 dispara primeiro e anota <code>sinal_risco = sim</code>. A R04 <strong>não dispara</strong>, porque anotaria a mesma coisa e não traria informação nova. Isso é a <strong>refração</strong>.</p>
+</blockquote>
+<h4>🚨 Família 2: alarmes de golpe conhecido (decidem e vencem o modelo)</h4>
+<p><strong>R06: clonagem → BLOQUEAR E DENUNCIAR</strong> (prioridade 95)</p>
+<ul>
+<li><strong>Regra:</strong> SE <code>padrao_clonagem</code> = sim, ENTÃO <strong>BLOQUEAR E DENUNCIAR</strong>.</li>
+<li><strong>O que o sistema recomenda:</strong> nunca envie códigos, senhas ou tokens. Bloqueie, denuncie e ative a confirmação em duas etapas.</li>
+<li><strong>Por que tem prioridade 95, a maior entre as que decidem:</strong> passar o código entrega a conta <strong>na hora</strong>. Não existe situação em que isso seja seguro.</li>
+<li><strong>Exemplo famoso do projeto:</strong> o modelo achou que <em>"Me informe o token…"</em> era <strong>legítima</strong>. A R02 e a R06 bloquearam mesmo assim. É o <strong>especialista corrigindo o modelo</strong>.</li>
+</ul>
+<p><strong>R07: falso parente sem confirmação → BLOQUEAR E DENUNCIAR</strong> (prioridade 90)</p>
+<ul>
+<li><strong>Regra:</strong> SE <code>padrao_falso_parente</code> = sim <strong>E</strong> <code>confirmou_por_ligacao</code> = <strong>não</strong>, ENTÃO <strong>BLOQUEAR E DENUNCIAR</strong>.</li>
+<li><strong>Em palavras simples:</strong> você ligou para o número antigo e a pessoa <strong>não</strong> confirmou, ou você não ligou. Então é golpe.</li>
+<li><strong>O que o sistema recomenda:</strong> não transfira, ligue para o número ANTIGO e, se não for a pessoa, bloqueie, denuncie e avise a família.</li>
+<li><strong>É o teste positivo</strong> do trabalho.</li>
+</ul>
+<p><strong>R08: falso parente confirmado → LIBERAR COM CAUTELA</strong> (prioridade 90)</p>
+<ul>
+<li><strong>Regra:</strong> SE <code>padrao_falso_parente</code> = sim <strong>E</strong> <code>confirmou_por_ligacao</code> = <strong>sim</strong>, ENTÃO <strong>LIBERAR COM CAUTELA</strong>.</li>
+<li><strong>Em palavras simples:</strong> você ligou e era mesmo seu filho. Pode ajudar, mas confira o <strong>nome do dono da chave Pix</strong> antes de pagar.</li>
+</ul>
+<p><strong>R09: falso parente, confirmação desconhecida → NÃO PAGAR AINDA</strong> (prioridade 90)</p>
+<ul>
+<li><strong>Regra:</strong> SE <code>padrao_falso_parente</code> = sim <strong>E</strong> <code>confirmou_por_ligacao</code> = <strong>desconhecido</strong>, ENTÃO <strong>NÃO PAGAR AINDA</strong>.</li>
+<li><strong>Em palavras simples:</strong> você respondeu "não sei". O sistema não manda bloquear (não tem certeza que é golpe) nem liberar (não tem certeza que é seguro). Ele manda <strong>esperar e ligar primeiro</strong>.</li>
+<li><strong>É o teste de informação ausente.</strong> Frase da Aula 12: <strong>"não saber" é diferente de "saber que não"</strong>.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Por que essas regras vencem o modelo?</strong> Elas têm prioridade <strong>90 ou 95</strong>, maior que a das regras do modelo (<strong>50</strong>). Se o modelo errar o palpite, o golpe conhecido continua sendo pego.</p>
+</blockquote>
+<h4>🤝 Família 3: regras que usam o palpite do modelo (prioridade 50)</h4>
+<p>Estas regras só agem quando <strong>nenhum alarme de golpe conhecido</strong> tocou. Cada uma olha 3 coisas: o <strong>palpite</strong> do modelo, se o <strong>contato está salvo</strong> e se há <strong>sinal de risco</strong>. Dá para decorar tudo nesta tabela:</p>
+<table>
+<thead>
+<tr>
+<th>Palpite do modelo</th>
+<th>Contato salvo?</th>
+<th>Mais alguma condição?</th>
+<th>Regra</th>
+<th>AÇÃO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>golpe</strong></td>
+<td>não</td>
+<td>sinal de risco = <strong>sim</strong></td>
+<td><strong>R10</strong></td>
+<td>🔴 BLOQUEAR E DENUNCIAR</td>
+</tr>
+<tr>
+<td><strong>golpe</strong></td>
+<td>não</td>
+<td>sinal de risco = <strong>não</strong></td>
+<td><strong>R11</strong></td>
+<td>🟡 VERIFICAR</td>
+</tr>
+<tr>
+<td><strong>golpe</strong></td>
+<td><strong>sim</strong></td>
+<td>–</td>
+<td><strong>R12</strong></td>
+<td>🟡 VERIFICAR (conta pode estar clonada)</td>
+</tr>
+<tr>
+<td><strong>spam</strong></td>
+<td>não</td>
+<td>–</td>
+<td><strong>R13</strong></td>
+<td>🟠 SILENCIAR E DENUNCIAR SPAM</td>
+</tr>
+<tr>
+<td><strong>spam</strong></td>
+<td><strong>sim</strong></td>
+<td>–</td>
+<td><strong>R14</strong></td>
+<td>⚪ ARQUIVAR</td>
+</tr>
+<tr>
+<td><strong>legítima</strong></td>
+<td><strong>sim</strong></td>
+<td>pede dinheiro = <strong>não</strong></td>
+<td><strong>R15</strong></td>
+<td>🟢 LIBERAR</td>
+</tr>
+<tr>
+<td><strong>legítima</strong></td>
+<td><strong>sim</strong></td>
+<td>pede dinheiro = <strong>sim</strong></td>
+<td><strong>R16</strong></td>
+<td>🟡 VERIFICAR (conta pode estar clonada)</td>
+</tr>
+<tr>
+<td><strong>legítima</strong></td>
+<td>não</td>
+<td>sinal de risco = <strong>sim</strong></td>
+<td><strong>R17</strong></td>
+<td>🟡 VERIFICAR</td>
+</tr>
+<tr>
+<td><strong>legítima</strong></td>
+<td>não</td>
+<td>sinal de risco = <strong>não</strong></td>
+<td><strong>R18</strong></td>
+<td>🟢 LIBERAR</td>
+</tr>
+</tbody>
+</table>
+<p>Agora uma por uma:</p>
+<p><strong>R10: golpe + número desconhecido + sinal de risco → BLOQUEAR E DENUNCIAR</strong></p>
+<ul>
+<li>O modelo acha que é golpe, você não conhece o número e tem link ou pedido de dinheiro. Tudo aponta para golpe.</li>
+<li><strong>Exemplo real do notebook (Caso 1):</strong> "Prezado cliente, seu cartão foi bloqueado hoje. Desbloqueie agora: https://cartao-desbloqueio.site", vindo de número desconhecido.</li>
+</ul>
+<p><strong>R11: golpe + número desconhecido, sem sinal de risco → VERIFICAR</strong></p>
+<ul>
+<li>O modelo desconfia, mas ainda não tem link nem pedido de dinheiro. Pode ser o golpista "puxando conversa" antes de pedir. Ou pode ser alguém de verdade com número novo.</li>
+<li><strong>Por que não bloquear:</strong> sem link e sem pedido não tem como roubar ainda. Bloquear poderia atingir uma pessoa inocente. Esta regra foi criada depois que o sistema <strong>bloqueava por engano</strong> a mensagem legítima <em>"Mãe, vou chegar mais tarde hoje"</em>.</li>
+</ul>
+<p><strong>R12: golpe + contato salvo → VERIFICAR</strong></p>
+<ul>
+<li>A mensagem parece golpe, mas veio de alguém que você conhece. A <strong>conta dessa pessoa pode ter sido clonada</strong>. Ligue para ela antes de qualquer coisa.</li>
+<li><strong>Exemplo real do notebook (Caso 3):</strong> "Amiga, tô sem acesso ao app do banco, me empresta 300 no pix?", vindo de contato salvo.</li>
+</ul>
+<p><strong>R13: spam + número desconhecido → SILENCIAR E DENUNCIAR SPAM</strong></p>
+<ul>
+<li>Propaganda que você não pediu, de quem você não conhece. Denuncie como spam.</li>
+</ul>
+<p><strong>R14: spam + contato salvo → ARQUIVAR</strong></p>
+<ul>
+<li>Propaganda ou corrente de um conhecido, como o tio que manda "bom dia" com corrente. Não é perigoso, só chato. Arquive e não repasse.</li>
+<li><strong>Exemplo real do notebook (Caso 2):</strong> "Bom dia!!! Compartilhe essa mensagem com 10 amigos e receba boas notícias amanhã!", vindo de contato salvo.</li>
+</ul>
+<p><strong>R15: legítima + contato salvo + sem pedido de dinheiro → LIBERAR</strong></p>
+<ul>
+<li>Mensagem normal de quem você conhece e sem pedir dinheiro. Pode ler e responder tranquilo.</li>
+</ul>
+<p><strong>R16: legítima + contato salvo + pedido de dinheiro → VERIFICAR</strong></p>
+<ul>
+<li>O texto parece normal e vem de um conhecido, <strong>mas pede dinheiro</strong>. Contas clonadas usam justamente o nome de conhecidos. Ligue antes de pagar.</li>
+<li><strong>Por que existe:</strong> é uma <strong>rede de segurança</strong> para quando o modelo errar e chamar um pedido de dinheiro de "legítima". No dataset atual o modelo já chama esses pedidos de golpe (e quem decide é a R12), por isso a R16 não dispara nos testes. A <strong>verificação das 432 combinações</strong> prova que ela pode disparar (é <strong>alcançável</strong>).</li>
+</ul>
+<p><strong>R17: legítima + número desconhecido + sinal de risco → VERIFICAR</strong></p>
+<ul>
+<li>Parece normal, mas vem de número desconhecido e tem link ou pedido de dinheiro. Confirme quem é antes de clicar ou pagar.</li>
+</ul>
+<p><strong>R18: legítima + número desconhecido, sem sinal de risco → LIBERAR</strong></p>
+<ul>
+<li>Número desconhecido, mas sem link e sem pedido. Exemplo: "Oi mãe, troquei de número, salva esse aqui. Beijos!". Pode responder, é só ter cuidado se depois vier um pedido.</li>
+</ul>
+<h4>E se nenhuma regra conseguir decidir?</h4>
+<p>O resultado é <strong>INCONCLUSIVO</strong>: "não clique, não pague e peça ajuda a alguém de confiança". O motor também para se passar de <strong>50 ciclos</strong>, para nunca ficar rodando para sempre.</p>
+<h3>0.7 O caminho que o sistema faz (para desenhar na prova)</h3>
+<p>Por causa das prioridades, a decisão sempre segue esta ordem:</p>
+<pre><code>1. Pede código, senha ou token?
+      SIM → R02 + R06 → BLOQUEAR E DENUNCIAR (fim)
+      NÃO → passo 2
+
+2. Diz que trocou de número E pede dinheiro? (R01)
+      SIM → pergunta: &quot;você ligou e a pessoa confirmou?&quot;
+              não     → R07 → BLOQUEAR E DENUNCIAR
+              sim     → R08 → LIBERAR COM CAUTELA
+              não sei → R09 → NÃO PAGAR AINDA
+      NÃO → passo 3
+
+3. Olha o palpite do modelo, pergunta se o contato está salvo
+   e consulta a tabela da família 3 (R10 a R18).
+</code></pre>
+<blockquote>
+<p>As regras R03, R04 e R05 rodam logo no começo e preparam o fato <code>sinal_risco</code>, que a família 3 usa.</p>
+</blockquote>
+<h3>0.8 Passo a passo real: a mensagem da Dona Marta</h3>
+<p>Isto é <strong>exatamente</strong> o que o notebook imprime no teste positivo (seção 12). Veja o que cada parte significa:</p>
+<p><strong>Mensagem:</strong> <em>"Oi mãe, troquei de número. Me faz um pix de 700 reais agora? É urgente, depois te explico."</em></p>
+<p><strong>Passo 1, a lupa:</strong> o sistema anota os fatos do texto.</p>
+<pre><code>tem_link = False      (nenhuma palavra começa com http://, https:// ou www.)
+pede_dinheiro = True  (&quot;Me faz um pix de 700 reais&quot;)
+pede_codigo = False
+troca_numero = True   (&quot;troquei de número&quot;)
+</code></pre>
+<p><strong>Passo 2, o palpite:</strong> <code>PREVISÃO DO MODELO: golpe</code>. A folha da árvore tinha 100% de exemplos de golpe. Isso <strong>não</strong> é uma probabilidade garantida, é só a proporção dos exemplos de treino naquela folha.</p>
+<p><strong>Passo 3, o motor lê as regras, ciclo por ciclo:</strong></p>
+<pre><code>Ciclo 1: R01 disparou → troca de número + pedido de dinheiro = padrão do falso parente
+Ciclo 2: R04 disparou → pede dinheiro = há sinal de risco
+Ciclo 3: PERGUNTA 'confirmou_por_ligacao' (porque a R07 precisa desse fato) → resposta: não
+Ciclo 4: R07 disparou → falso parente + não confirmou = BLOQUEAR E DENUNCIAR
+</code></pre>
+<ul>
+<li><strong>Ciclo 1:</strong> as regras de prioridade 100 falam primeiro. A R01 tem as duas condições verdadeiras, então dispara.</li>
+<li><strong>Ciclo 2:</strong> a R04 também é de prioridade 100 e traz informação nova (<code>sinal_risco</code>), então dispara. A R05 não dispara, porque exige "não pede dinheiro".</li>
+<li><strong>Ciclo 3:</strong> nenhuma regra consegue disparar com o que está no caderninho. O motor procura a regra de <strong>maior prioridade</strong> que só depende de algo perguntável: é a <strong>R07</strong> (prioridade 90), que precisa saber se você ligou. Por isso ele pergunta sobre a <strong>ligação</strong>, e não sobre o contato salvo.</li>
+<li><strong>Ciclo 4:</strong> com a resposta "não", a R07 dispara e define a ação. O objetivo foi alcançado, então o motor <strong>para</strong>.</li>
+</ul>
+<p><strong>Passo 4, a explicação "COMO?"</strong> (o sistema monta de trás para frente):</p>
+<pre><code>acao = BLOQUEAR E DENUNCIAR       [veio da R07]
+   padrao_falso_parente = True    [veio da R01]
+      troca_numero = True         [veio do texto]
+      pede_dinheiro = True        [veio do texto]
+   confirmou_por_ligacao = False  [veio do usuário]
+</code></pre>
+<p><strong>E se a resposta fosse diferente?</strong> Esse é o exercício "mudando um só fato":</p>
+<ul>
+<li>Respondeu <strong>"sim"</strong> → R08 → <strong>LIBERAR COM CAUTELA</strong>.</li>
+<li>Respondeu <strong>"não sei"</strong> → R09 → <strong>NÃO PAGAR AINDA</strong> (teste de informação ausente).</li>
+</ul>
+<h3>0.9 Os 3 testes obrigatórios, em palavras simples</h3>
+<table>
+<thead>
+<tr>
+<th>Teste</th>
+<th>Pergunta que ele responde</th>
+<th>Mensagem</th>
+<th>O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅ <strong>Positivo</strong></td>
+<td>"Quando tudo está presente, a regra dispara?"</td>
+<td>"Oi mãe, troquei de número. Me faz um pix…" + <strong>não</strong> liguei</td>
+<td>R01 e R07 disparam → <strong>BLOQUEAR E DENUNCIAR</strong></td>
+</tr>
+<tr>
+<td>✅ <strong>Negativo</strong></td>
+<td>"Quando falta uma condição, a regra fica quieta?"</td>
+<td>"Oi mãe, troquei de número, salva esse aqui. Beijos!" (sem pedir dinheiro, número desconhecido)</td>
+<td>A R01 <strong>não</strong> dispara. O modelo diz legítima e a R18 manda <strong>LIBERAR</strong></td>
+</tr>
+<tr>
+<td>✅ <strong>Informação ausente</strong></td>
+<td>"Quando a pessoa não sabe, o sistema trata diferente de 'não'?"</td>
+<td>A mesma do falso parente + resposta <strong>"não sei"</strong></td>
+<td>A R09 dispara → <strong>NÃO PAGAR AINDA</strong> (e não BLOQUEAR)</td>
+</tr>
+</tbody>
+</table>
+<h3>0.10 Como ler a saída do notebook</h3>
+<p>Toda análise impressa no notebook tem as mesmas partes:</p>
+<table>
+<thead>
+<tr>
+<th>O que aparece</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MENSAGEM:</code></td>
+<td>O texto analisado</td>
+</tr>
+<tr>
+<td><code>PREVISÃO DO MODELO:</code></td>
+<td>O palpite da árvore (Etapa 2) e a proporção na folha</td>
+</tr>
+<tr>
+<td><code>FATOS DO TEXTO:</code></td>
+<td>As 4 pistas de sim/não que a lupa achou (Etapa 1)</td>
+</tr>
+<tr>
+<td><code>PERGUNTOU:</code> + <code>Por quê?</code></td>
+<td>A pergunta feita ao usuário e qual regra precisava dela</td>
+</tr>
+<tr>
+<td><code>RASTRO DE INFERÊNCIA:</code></td>
+<td>Cada ciclo do motor: qual regra disparou ou o que foi perguntado</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;&gt; AÇÃO:</code> e <code>&gt;&gt;&gt; RECOMENDAÇÃO:</code></td>
+<td>A decisão final e o conselho para a pessoa</td>
+</tr>
+<tr>
+<td><code>COMO o sistema chegou…</code></td>
+<td>A explicação de trás para frente, com a origem de cada fato (texto, regra ou usuário)</td>
+</tr>
+<tr>
+<td><code>AVISO:</code></td>
+<td>Lembrete de que a decisão final é humana</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 class="quebra">1. O projeto em 30 segundos (para abrir qualquer resposta)</h2>
 <blockquote>
 <p>"O <strong>Sentinela Zap</strong> é um <strong>sistema especialista híbrido</strong> que ajuda a pessoa a decidir o que fazer com uma mensagem suspeita de WhatsApp. Primeiro, <strong>um autômato finito e expressões regulares</strong> extraem atributos do texto. Depois, uma <strong>árvore de decisão</strong> (aprendizado supervisionado) prevê se a mensagem é <strong>legítima, spam ou golpe</strong>. Essa <strong>previsão vira um fato</strong> na memória de trabalho. Por fim, um <strong>motor de inferência com 18 regras SE…ENTÃO</strong> combina esse fato com outros fatos do texto e do usuário e decide a <strong>ação</strong>: liberar, verificar, silenciar ou bloquear. O sistema <strong>explica</strong> quais regras usou."</p>
 </blockquote>
@@ -389,6 +929,9 @@ AÇÃO + RECOMENDAÇÃO + EXPLICAÇÃO (&quot;como?&quot; e &quot;por quê?&quot
 </ul>
 <hr />
 <h2>6. As 18 regras (resumo)</h2>
+<blockquote>
+<p>A explicação de cada regra, uma por uma e com exemplos, está na <strong>Parte 0.6</strong>. Aqui fica só o resumo para revisar.</p>
+</blockquote>
 <table>
 <thead>
 <tr>
@@ -518,6 +1061,16 @@ O "tom" de engenharia social, como pressão emocional e intimidade falsa. Usamos
 É uma <strong>rede de segurança</strong>: legítima + contato salvo + pedido de dinheiro → VERIFICAR. Ela não dispara porque o modelo atual já classifica pedidos de dinheiro como golpe. Se o modelo mudar ou errar, ela protege. A verificação exaustiva prova que ela é <strong>alcançável</strong>.</p>
 <p><strong>22. Por que a R10 exige "sinal de risco"?</strong>
 Porque todo golpe precisa de um vetor: link, pedido de dinheiro ou código. Se o modelo desconfia mas não há vetor, a R11 manda <strong>verificar</strong> em vez de bloquear. Isso evita bloquear uma mensagem legítima de um número novo.</p>
+<p><strong>23. O que é o fato <code>sinal_risco</code> e de onde ele vem?</strong>
+É um <strong>fato derivado</strong>, que não vem do texto nem do usuário: é criado por regras. A R03 (tem link) e a R04 (pede dinheiro) anotam <code>sinal_risco = sim</code>. A R05 (sem link e sem pedido) anota <code>sinal_risco = não</code>. Depois as regras R10, R11, R17 e R18 usam esse fato. Isso é <strong>encadeamento</strong>.</p>
+<p><strong>24. Se a mensagem tem link E pede dinheiro, a R03 e a R04 disparam?</strong>
+Só a R03 dispara, porque vem primeiro na base. A R04 anotaria a mesma coisa (<code>sinal_risco = sim</code>) e não traria informação nova. Isso é a <strong>refração</strong>.</p>
+<p><strong>25. No golpe do falso parente, por que o sistema pergunta sobre a ligação e não sobre o contato salvo?</strong>
+Porque o motor pergunta o que a regra de <strong>maior prioridade</strong> precisa. A R07 (prioridade 90) precisa de <code>confirmou_por_ligacao</code>. As regras que usam <code>contato_salvo</code> têm prioridade 50, então nem chegam a ser consultadas.</p>
+<p><strong>26. Qual a diferença entre o palpite do modelo e a decisão do sistema?</strong>
+O palpite (<code>previsao</code>) é só <strong>um fato</strong> entre vários. A <strong>decisão</strong> (<code>acao</code>) sai das regras, que juntam o palpite com as pistas do texto e as respostas do usuário. Por isso a mesma previsão "spam" pode virar SILENCIAR (R13) ou ARQUIVAR (R14).</p>
+<p><strong>27. O que significa "proporção na folha: 100%"?</strong>
+É a porcentagem de exemplos de treino daquela folha da árvore que eram da classe prevista. <strong>Não</strong> é uma probabilidade garantida de acerto (a Aula 12 alerta sobre isso).</p>
 <hr />
 <h2>9. Roteiro para apresentar (2 minutos)</h2>
 <ol>

@@ -1,6 +1,317 @@
 # 📘 Guia de Estudo: Sentinela Zap
 
 > Resumo para **estudar e explicar o projeto na prova**. Cada conceito das Aulas 12 e 13 aparece ligado a **onde ele está no nosso projeto**.
+>
+> **Como estudar:** leia primeiro a **Parte 0**, que explica o sistema do zero, como para uma criança. Depois passe para as seções 1 a 10, que trazem os nomes técnicos que a professora vai cobrar.
+
+---
+
+## 0. COMECE AQUI: o sistema explicado do zero
+
+### 0.1 A ideia em uma história
+
+Imagine que a Dona Marta tem um **porteiro muito esperto** no celular. Toda mensagem que chega passa por ele antes de ela responder. Ele faz três coisas, sempre na mesma ordem:
+
+1. **Olha a mensagem com uma lupa 🔍** e anota as pistas. Tem link? Pede dinheiro? Pede código? Diz que trocou de número?
+2. **Dá um palpite 🤔**: "acho que é **golpe**", "acho que é **spam**" ou "acho que é **legítima**". Ele aprendeu a palpitar vendo 150 mensagens de exemplo que já vinham com a resposta certa.
+3. **Consulta o livro de regras 📖** e decide o que fazer: **LIBERAR**, **VERIFICAR**, **SILENCIAR**, **ARQUIVAR**, **NÃO PAGAR AINDA** ou **BLOQUEAR E DENUNCIAR**. Se faltar alguma informação, ele **pergunta** para a Dona Marta. No final, ele **explica** quais regras usou.
+
+Cada parte da história tem um nome técnico:
+
+| Na história | Nome técnico | Matéria |
+|---|---|---|
+| A lupa que acha pistas | **Extração de atributos** com **AFD** e **expressões regulares** | Linguagens Formais e Autômatos |
+| O palpite aprendido com exemplos | **Árvore de decisão**, um modelo de **aprendizado supervisionado** | Aprendizado de máquina (Aula 13) |
+| O livro de regras | **Base de conhecimento**: 18 regras SE…ENTÃO | Sistemas especialistas (Aula 12) |
+| O porteiro lendo o livro e decidindo | **Motor de inferência** | Sistemas especialistas (Aula 12) |
+| O caderninho onde ele anota tudo | **Memória de trabalho** | Sistemas especialistas (Aula 12) |
+| "Eu decidi isso por causa daquilo" | **Mecanismo de explicação** ("Como?" e "Por quê?") | Sistemas especialistas (Aula 12) |
+
+> **Frase para decorar:** "A lupa acha as pistas, a árvore dá o palpite e as regras dão a decisão."
+
+### 0.2 Palavras que você precisa entender
+
+- **Fato:** uma informação sobre a mensagem, anotada no caderninho. Exemplo: `pede_dinheiro = sim`.
+- **Fato do tipo sim/não (booleano):** só pode ser **verdadeiro** (True) ou **falso** (False).
+- **Regra:** uma frase do tipo **SE** (condições) **ENTÃO** (conclusão). Exemplo: "SE pede código ENTÃO é clonagem".
+- **Disparar uma regra:** quando todas as condições do SE são verdadeiras, a regra "dispara" e o ENTÃO é anotado no caderninho.
+- **Memória de trabalho:** o caderninho com todos os fatos do caso que está sendo analisado.
+- **Prioridade:** quando várias regras podem disparar ao mesmo tempo, a de **número maior fala primeiro** (100, depois 95, depois 90, depois 50).
+- **Refração:** cada regra dispara **no máximo uma vez** e só se trouxer **informação nova** para o caderninho.
+- **Desconhecido:** é o que o sistema anota quando a pessoa responde **"não sei"**. "Não sei" é **diferente** de "não".
+
+### 0.3 Etapa 1: a lupa (as pistas do texto)
+
+Primeiro o texto é "limpo": tudo vira minúscula e os acentos são retirados ("Código" vira "codigo"). Depois a lupa procura **14 pistas**. O modelo usa as 14. As **4 mais importantes** viram fatos de sim/não para as regras:
+
+| Fato para as regras | Pergunta que a lupa faz | Como ela descobre | Exemplo que dá **sim** |
+|---|---|---|---|
+| `tem_link` | Tem algum link? | Um **AFD** lê cada palavra, letra por letra, e aceita se começa com `http://`, `https://` ou `www.` | "acesse **https://banco-falso.site**" |
+| `pede_dinheiro` | A pessoa está **pedindo** dinheiro? | Uma **expressão regular** procura um verbo de pedido (empresta, faz, manda, paga…) seguido, **na mesma frase**, de algo de dinheiro (pix, reais, R$, boleto…) | "**me faz um pix** de 700 reais" |
+| `pede_codigo` | Pede código, senha ou token? | Expressão regular: "código de verificação", "manda o código", "token", "senha do banco"… | "**me passa o código** que chegou no SMS" |
+| `troca_numero` | Diz que trocou de número? | Expressão regular: "troquei de número", "número novo", "celular quebrou", "perdi o chip"… | "Oi mãe, **troquei de número**" |
+
+> ⚠️ **Detalhe importante:** "**já fiz o pix**" **não** é pedido de dinheiro, porque não tem verbo de pedido antes do "pix". Já "**me faz um pix**" é pedido. É por isso que o atributo se chama `pedido_dinheiro` e não apenas "fala de dinheiro".
+
+As outras 10 pistas servem **só para o palpite do modelo**:
+
+| Pista | O que conta |
+|---|---|
+| `qtd_links` | Quantos links existem (é o AFD contando) |
+| `qtd_dinheiro` | Quantas palavras de dinheiro aparecem (pix, boleto, reais…), **mesmo sem ser pedido** |
+| `qtd_urgencia` | Palavras de pressa: urgente, agora, hoje, bloqueado, expira… |
+| `qtd_promocional` | Palavras de propaganda: promoção, desconto, grátis, sorteio, cupom… |
+| `qtd_corrente` | Palavras de corrente: compartilhe, repasse, encaminhe… |
+| `qtd_dados_sensiveis` | Pedido de dados: CPF, senha, login, cadastro, endereço… |
+| `qtd_institucional` | Fingir ser empresa: prezado cliente, sua conta, central, FGTS… |
+| `qtd_chamada_acao` | Mandar fazer algo: clique, acesse, cadastre, confira, aproveite… |
+| `qtd_tom_pessoal` | Tom de conhecido: oi, mãe, pai, amiga, mano, saudade… |
+| `pct_maiusculas` e `qtd_exclamacoes` | Quanto a mensagem "grita": letras MAIÚSCULAS e pontos de exclamação |
+
+### 0.4 Etapa 2: o palpite (a árvore de decisão)
+
+A árvore de decisão funciona como o jogo de **"adivinhe em perguntas"**. Ela aprendeu sozinha, com as **112 mensagens de treino**, quais perguntas separam melhor golpe, spam e legítima. Por exemplo: "tem pedido de dinheiro? Se sim, quantas palavras de urgência?". No fim das perguntas ela chega numa **folha**, que é o palpite.
+
+- Ela foi testada com **38 mensagens que nunca tinha visto** e acertou **76,3%**.
+- O palpite vira um fato no caderninho: **`previsao = golpe`**, **`spam`** ou **`legitima`**.
+- **Esse é o ponto de integração** entre o aprendizado de máquina e o sistema especialista: o palpite do modelo entra como **fato** nas regras.
+
+### 0.5 As 2 perguntas que o sistema pode fazer para você
+
+Algumas informações **não estão no texto**. Só a pessoa sabe. Por isso o sistema pergunta, mas **só quando alguma regra precisa** da resposta:
+
+| Fato | Pergunta | Respostas possíveis |
+|---|---|---|
+| `contato_salvo` | "O número que enviou a mensagem está salvo nos seus contatos?" | sim / não / não sei |
+| `confirmou_por_ligacao` | "Você ligou para o número ANTIGO/conhecido da pessoa e ela confirmou o pedido?" | sim / não / não sei |
+
+Junto com a pergunta, o sistema diz **"Por quê?"**: qual regra precisa daquela resposta. Exemplo: *"Pergunto porque a regra R07 precisa desse fato."*
+
+### 0.6 Etapa 3: as 18 regras, uma por uma
+
+As regras são divididas em **3 famílias**. Pense nelas assim:
+
+| Família | Regras | Prioridade | O que faz | Comparação |
+|---|---|---|---|---|
+| 🕵️ **Detetives** | R01 a R05 | 100 (falam primeiro) | Só **anotam conclusões no caderninho**. **Não decidem** a ação. | O detetive junta pistas e escreve "isso é golpe do falso parente". |
+| 🚨 **Alarmes de golpe conhecido** | R06 a R09 | 95 e 90 | **Decidem a ação** quando um golpe famoso foi reconhecido. **Vencem o modelo.** | O alarme de incêndio: se tocou, não importa o palpite de ninguém. |
+| 🤝 **Usam o palpite do modelo** | R10 a R18 | 50 (falam por último) | Juntam o **palpite** + se o **contato é salvo** + se há **sinal de risco** e decidem. | O juiz que ouve o palpite e o contexto antes de decidir. |
+
+#### 🕵️ Família 1: os detetives (anotam fatos novos)
+
+**R01: golpe do falso parente**
+
+- **Regra:** SE `troca_numero` = sim **E** `pede_dinheiro` = sim, ENTÃO anota `padrao_falso_parente` = sim.
+- **Em palavras simples:** se alguém diz que mudou de número **e** já pede dinheiro, é o golpe mais famoso do WhatsApp.
+- **Exemplo:** "Oi mãe, troquei de número. Me faz um pix de 700 reais agora?"
+- **Por que existe:** é o golpe da Dona Marta. Não tem link nem erro de português, então só uma regra de especialista pega com certeza.
+- **Repare:** precisa das **duas** condições. "Troquei de número, salva esse aqui" (sem pedir dinheiro) **não** dispara a R01. Esse é o **teste negativo**.
+
+**R02: clonagem de conta**
+
+- **Regra:** SE `pede_codigo` = sim, ENTÃO anota `padrao_clonagem` = sim.
+- **Em palavras simples:** se pedem o código que chegou por SMS, a senha do banco ou um token, querem roubar sua conta.
+- **Exemplo:** "Olá, sou do banco. Seu token expirou. Me informe o token."
+- **Por que existe:** orientação oficial do WhatsApp: **nunca** compartilhe o código. Nenhuma empresa séria pede isso.
+
+**R03: link é sinal de risco**
+
+- **Regra:** SE `tem_link` = sim, ENTÃO anota `sinal_risco` = sim.
+- **Em palavras simples:** link pode levar a site falso. Já é motivo para ficar atento.
+
+**R04: pedido de dinheiro é sinal de risco**
+
+- **Regra:** SE `pede_dinheiro` = sim, ENTÃO anota `sinal_risco` = sim.
+- **Em palavras simples:** pedir dinheiro é o objetivo final de quase todo golpe.
+
+**R05: sem link e sem pedido, não há sinal de risco**
+
+- **Regra:** SE `tem_link` = não **E** `pede_dinheiro` = não, ENTÃO anota `sinal_risco` = não.
+- **Em palavras simples:** se não tem link nem pedido de dinheiro, o golpista ainda não tem "por onde" roubar.
+
+> 💡 **O que é "sinal de risco"?** É um fato **intermediário**, criado pelas regras R03, R04 e R05. Ele responde: "esta mensagem tem um caminho para o golpe acontecer (link ou pedido de dinheiro)?". Um fato criado por uma regra e usado por outra se chama **fato derivado**. Isso é **encadeamento**: uma regra prepara o terreno para a próxima.
+>
+> 💡 **E se tiver link E pedido de dinheiro?** A R03 dispara primeiro e anota `sinal_risco = sim`. A R04 **não dispara**, porque anotaria a mesma coisa e não traria informação nova. Isso é a **refração**.
+
+#### 🚨 Família 2: alarmes de golpe conhecido (decidem e vencem o modelo)
+
+**R06: clonagem → BLOQUEAR E DENUNCIAR** (prioridade 95)
+
+- **Regra:** SE `padrao_clonagem` = sim, ENTÃO **BLOQUEAR E DENUNCIAR**.
+- **O que o sistema recomenda:** nunca envie códigos, senhas ou tokens. Bloqueie, denuncie e ative a confirmação em duas etapas.
+- **Por que tem prioridade 95, a maior entre as que decidem:** passar o código entrega a conta **na hora**. Não existe situação em que isso seja seguro.
+- **Exemplo famoso do projeto:** o modelo achou que *"Me informe o token…"* era **legítima**. A R02 e a R06 bloquearam mesmo assim. É o **especialista corrigindo o modelo**.
+
+**R07: falso parente sem confirmação → BLOQUEAR E DENUNCIAR** (prioridade 90)
+
+- **Regra:** SE `padrao_falso_parente` = sim **E** `confirmou_por_ligacao` = **não**, ENTÃO **BLOQUEAR E DENUNCIAR**.
+- **Em palavras simples:** você ligou para o número antigo e a pessoa **não** confirmou, ou você não ligou. Então é golpe.
+- **O que o sistema recomenda:** não transfira, ligue para o número ANTIGO e, se não for a pessoa, bloqueie, denuncie e avise a família.
+- **É o teste positivo** do trabalho.
+
+**R08: falso parente confirmado → LIBERAR COM CAUTELA** (prioridade 90)
+
+- **Regra:** SE `padrao_falso_parente` = sim **E** `confirmou_por_ligacao` = **sim**, ENTÃO **LIBERAR COM CAUTELA**.
+- **Em palavras simples:** você ligou e era mesmo seu filho. Pode ajudar, mas confira o **nome do dono da chave Pix** antes de pagar.
+
+**R09: falso parente, confirmação desconhecida → NÃO PAGAR AINDA** (prioridade 90)
+
+- **Regra:** SE `padrao_falso_parente` = sim **E** `confirmou_por_ligacao` = **desconhecido**, ENTÃO **NÃO PAGAR AINDA**.
+- **Em palavras simples:** você respondeu "não sei". O sistema não manda bloquear (não tem certeza que é golpe) nem liberar (não tem certeza que é seguro). Ele manda **esperar e ligar primeiro**.
+- **É o teste de informação ausente.** Frase da Aula 12: **"não saber" é diferente de "saber que não"**.
+
+> 💡 **Por que essas regras vencem o modelo?** Elas têm prioridade **90 ou 95**, maior que a das regras do modelo (**50**). Se o modelo errar o palpite, o golpe conhecido continua sendo pego.
+
+#### 🤝 Família 3: regras que usam o palpite do modelo (prioridade 50)
+
+Estas regras só agem quando **nenhum alarme de golpe conhecido** tocou. Cada uma olha 3 coisas: o **palpite** do modelo, se o **contato está salvo** e se há **sinal de risco**. Dá para decorar tudo nesta tabela:
+
+| Palpite do modelo | Contato salvo? | Mais alguma condição? | Regra | AÇÃO |
+|---|---|---|---|---|
+| **golpe** | não | sinal de risco = **sim** | **R10** | 🔴 BLOQUEAR E DENUNCIAR |
+| **golpe** | não | sinal de risco = **não** | **R11** | 🟡 VERIFICAR |
+| **golpe** | **sim** | – | **R12** | 🟡 VERIFICAR (conta pode estar clonada) |
+| **spam** | não | – | **R13** | 🟠 SILENCIAR E DENUNCIAR SPAM |
+| **spam** | **sim** | – | **R14** | ⚪ ARQUIVAR |
+| **legítima** | **sim** | pede dinheiro = **não** | **R15** | 🟢 LIBERAR |
+| **legítima** | **sim** | pede dinheiro = **sim** | **R16** | 🟡 VERIFICAR (conta pode estar clonada) |
+| **legítima** | não | sinal de risco = **sim** | **R17** | 🟡 VERIFICAR |
+| **legítima** | não | sinal de risco = **não** | **R18** | 🟢 LIBERAR |
+
+Agora uma por uma:
+
+**R10: golpe + número desconhecido + sinal de risco → BLOQUEAR E DENUNCIAR**
+
+- O modelo acha que é golpe, você não conhece o número e tem link ou pedido de dinheiro. Tudo aponta para golpe.
+- **Exemplo real do notebook (Caso 1):** "Prezado cliente, seu cartão foi bloqueado hoje. Desbloqueie agora: https://cartao-desbloqueio.site", vindo de número desconhecido.
+
+**R11: golpe + número desconhecido, sem sinal de risco → VERIFICAR**
+
+- O modelo desconfia, mas ainda não tem link nem pedido de dinheiro. Pode ser o golpista "puxando conversa" antes de pedir. Ou pode ser alguém de verdade com número novo.
+- **Por que não bloquear:** sem link e sem pedido não tem como roubar ainda. Bloquear poderia atingir uma pessoa inocente. Esta regra foi criada depois que o sistema **bloqueava por engano** a mensagem legítima *"Mãe, vou chegar mais tarde hoje"*.
+
+**R12: golpe + contato salvo → VERIFICAR**
+
+- A mensagem parece golpe, mas veio de alguém que você conhece. A **conta dessa pessoa pode ter sido clonada**. Ligue para ela antes de qualquer coisa.
+- **Exemplo real do notebook (Caso 3):** "Amiga, tô sem acesso ao app do banco, me empresta 300 no pix?", vindo de contato salvo.
+
+**R13: spam + número desconhecido → SILENCIAR E DENUNCIAR SPAM**
+
+- Propaganda que você não pediu, de quem você não conhece. Denuncie como spam.
+
+**R14: spam + contato salvo → ARQUIVAR**
+
+- Propaganda ou corrente de um conhecido, como o tio que manda "bom dia" com corrente. Não é perigoso, só chato. Arquive e não repasse.
+- **Exemplo real do notebook (Caso 2):** "Bom dia!!! Compartilhe essa mensagem com 10 amigos e receba boas notícias amanhã!", vindo de contato salvo.
+
+**R15: legítima + contato salvo + sem pedido de dinheiro → LIBERAR**
+
+- Mensagem normal de quem você conhece e sem pedir dinheiro. Pode ler e responder tranquilo.
+
+**R16: legítima + contato salvo + pedido de dinheiro → VERIFICAR**
+
+- O texto parece normal e vem de um conhecido, **mas pede dinheiro**. Contas clonadas usam justamente o nome de conhecidos. Ligue antes de pagar.
+- **Por que existe:** é uma **rede de segurança** para quando o modelo errar e chamar um pedido de dinheiro de "legítima". No dataset atual o modelo já chama esses pedidos de golpe (e quem decide é a R12), por isso a R16 não dispara nos testes. A **verificação das 432 combinações** prova que ela pode disparar (é **alcançável**).
+
+**R17: legítima + número desconhecido + sinal de risco → VERIFICAR**
+
+- Parece normal, mas vem de número desconhecido e tem link ou pedido de dinheiro. Confirme quem é antes de clicar ou pagar.
+
+**R18: legítima + número desconhecido, sem sinal de risco → LIBERAR**
+
+- Número desconhecido, mas sem link e sem pedido. Exemplo: "Oi mãe, troquei de número, salva esse aqui. Beijos!". Pode responder, é só ter cuidado se depois vier um pedido.
+
+#### E se nenhuma regra conseguir decidir?
+
+O resultado é **INCONCLUSIVO**: "não clique, não pague e peça ajuda a alguém de confiança". O motor também para se passar de **50 ciclos**, para nunca ficar rodando para sempre.
+
+### 0.7 O caminho que o sistema faz (para desenhar na prova)
+
+Por causa das prioridades, a decisão sempre segue esta ordem:
+
+```
+1. Pede código, senha ou token?
+      SIM → R02 + R06 → BLOQUEAR E DENUNCIAR (fim)
+      NÃO → passo 2
+
+2. Diz que trocou de número E pede dinheiro? (R01)
+      SIM → pergunta: "você ligou e a pessoa confirmou?"
+              não     → R07 → BLOQUEAR E DENUNCIAR
+              sim     → R08 → LIBERAR COM CAUTELA
+              não sei → R09 → NÃO PAGAR AINDA
+      NÃO → passo 3
+
+3. Olha o palpite do modelo, pergunta se o contato está salvo
+   e consulta a tabela da família 3 (R10 a R18).
+```
+
+> As regras R03, R04 e R05 rodam logo no começo e preparam o fato `sinal_risco`, que a família 3 usa.
+
+### 0.8 Passo a passo real: a mensagem da Dona Marta
+
+Isto é **exatamente** o que o notebook imprime no teste positivo (seção 12). Veja o que cada parte significa:
+
+**Mensagem:** *"Oi mãe, troquei de número. Me faz um pix de 700 reais agora? É urgente, depois te explico."*
+
+**Passo 1, a lupa:** o sistema anota os fatos do texto.
+```
+tem_link = False      (nenhuma palavra começa com http://, https:// ou www.)
+pede_dinheiro = True  ("Me faz um pix de 700 reais")
+pede_codigo = False
+troca_numero = True   ("troquei de número")
+```
+
+**Passo 2, o palpite:** `PREVISÃO DO MODELO: golpe`. A folha da árvore tinha 100% de exemplos de golpe. Isso **não** é uma probabilidade garantida, é só a proporção dos exemplos de treino naquela folha.
+
+**Passo 3, o motor lê as regras, ciclo por ciclo:**
+```
+Ciclo 1: R01 disparou → troca de número + pedido de dinheiro = padrão do falso parente
+Ciclo 2: R04 disparou → pede dinheiro = há sinal de risco
+Ciclo 3: PERGUNTA 'confirmou_por_ligacao' (porque a R07 precisa desse fato) → resposta: não
+Ciclo 4: R07 disparou → falso parente + não confirmou = BLOQUEAR E DENUNCIAR
+```
+
+- **Ciclo 1:** as regras de prioridade 100 falam primeiro. A R01 tem as duas condições verdadeiras, então dispara.
+- **Ciclo 2:** a R04 também é de prioridade 100 e traz informação nova (`sinal_risco`), então dispara. A R05 não dispara, porque exige "não pede dinheiro".
+- **Ciclo 3:** nenhuma regra consegue disparar com o que está no caderninho. O motor procura a regra de **maior prioridade** que só depende de algo perguntável: é a **R07** (prioridade 90), que precisa saber se você ligou. Por isso ele pergunta sobre a **ligação**, e não sobre o contato salvo.
+- **Ciclo 4:** com a resposta "não", a R07 dispara e define a ação. O objetivo foi alcançado, então o motor **para**.
+
+**Passo 4, a explicação "COMO?"** (o sistema monta de trás para frente):
+```
+acao = BLOQUEAR E DENUNCIAR       [veio da R07]
+   padrao_falso_parente = True    [veio da R01]
+      troca_numero = True         [veio do texto]
+      pede_dinheiro = True        [veio do texto]
+   confirmou_por_ligacao = False  [veio do usuário]
+```
+
+**E se a resposta fosse diferente?** Esse é o exercício "mudando um só fato":
+
+- Respondeu **"sim"** → R08 → **LIBERAR COM CAUTELA**.
+- Respondeu **"não sei"** → R09 → **NÃO PAGAR AINDA** (teste de informação ausente).
+
+### 0.9 Os 3 testes obrigatórios, em palavras simples
+
+| Teste | Pergunta que ele responde | Mensagem | O que acontece |
+|---|---|---|---|
+| ✅ **Positivo** | "Quando tudo está presente, a regra dispara?" | "Oi mãe, troquei de número. Me faz um pix…" + **não** liguei | R01 e R07 disparam → **BLOQUEAR E DENUNCIAR** |
+| ✅ **Negativo** | "Quando falta uma condição, a regra fica quieta?" | "Oi mãe, troquei de número, salva esse aqui. Beijos!" (sem pedir dinheiro, número desconhecido) | A R01 **não** dispara. O modelo diz legítima e a R18 manda **LIBERAR** |
+| ✅ **Informação ausente** | "Quando a pessoa não sabe, o sistema trata diferente de 'não'?" | A mesma do falso parente + resposta **"não sei"** | A R09 dispara → **NÃO PAGAR AINDA** (e não BLOQUEAR) |
+
+### 0.10 Como ler a saída do notebook
+
+Toda análise impressa no notebook tem as mesmas partes:
+
+| O que aparece | O que significa |
+|---|---|
+| `MENSAGEM:` | O texto analisado |
+| `PREVISÃO DO MODELO:` | O palpite da árvore (Etapa 2) e a proporção na folha |
+| `FATOS DO TEXTO:` | As 4 pistas de sim/não que a lupa achou (Etapa 1) |
+| `PERGUNTOU:` + `Por quê?` | A pergunta feita ao usuário e qual regra precisava dela |
+| `RASTRO DE INFERÊNCIA:` | Cada ciclo do motor: qual regra disparou ou o que foi perguntado |
+| `>>> AÇÃO:` e `>>> RECOMENDAÇÃO:` | A decisão final e o conselho para a pessoa |
+| `COMO o sistema chegou…` | A explicação de trás para frente, com a origem de cada fato (texto, regra ou usuário) |
+| `AVISO:` | Lembrete de que a decisão final é humana |
 
 ---
 
@@ -53,6 +364,7 @@ AÇÃO + RECOMENDAÇÃO + EXPLICAÇÃO ("como?" e "por quê?")
 | **Engenheiro do conhecimento** | Formaliza a base | Nós (a equipe) |
 
 ### Ciclo de inferência (decore os 3 passos)
+
 1. **Identificar** as regras cujas condições estão satisfeitas.
 2. **Escolher** uma regra (resolução de conflito) e **executar** a conclusão.
 3. **Atualizar** os fatos e **repetir** até uma condição de parada.
@@ -71,11 +383,13 @@ AÇÃO + RECOMENDAÇÃO + EXPLICAÇÃO ("como?" e "por quê?")
 > Nosso motor também tem um pouco de "para trás": ele só pergunta ao usuário quando **uma regra precisa** daquele fato. Isso é a resposta do **"Por quê?"**.
 
 ### Resolução de conflitos (quando duas regras servem)
+
 - Usamos **prioridade** (100 → 95 → 90 → 50) e, em empate, a **ordem da base**.
 - Regras de **padrão de golpe conhecido** (R06–R09) têm prioridade **maior** que as regras do modelo (R10–R18). Assim, **o especialista prevalece se o modelo errar**.
 - **Refração:** cada regra dispara uma vez, e só se gerar **informação nova**.
 
 ### Condições de parada
+
 1. O **objetivo** (`acao`) foi alcançado.
 2. **Nenhuma regra** produz informação nova → `INCONCLUSIVO` e encaminhamento humano.
 3. **Limite de ciclos** (50) para evitar laço infinito.
@@ -86,6 +400,7 @@ AÇÃO + RECOMENDAÇÃO + EXPLICAÇÃO ("como?" e "por quê?")
 No projeto: responder **"não sei"** à pergunta "você confirmou por ligação?" gera `confirmou_por_ligacao = desconhecido`, e a **R09** recomenda **NÃO PAGAR AINDA**. Responder **"não"** dispara a **R07** e leva a **BLOQUEAR**. São respostas diferentes, porque **ausência de evidência não é negação**.
 
 ### Explicação "Como?" e "Por quê?"
+
 - **Como?** Mostra a cadeia: `acao` ← R07 ← (`padrao_falso_parente` ← R01 ← `troca_numero`, `pede_dinheiro`) + `confirmou_por_ligacao` (usuário).
 - **Por quê?** Quando pergunta algo: "Pergunto porque a regra R07 precisa desse fato".
 
@@ -128,6 +443,7 @@ Conhecimento tácito é difícil de formalizar, regras ficam desatualizadas e, f
 | **Hiperparâmetro** | Configuração escolhida **antes** do treino | Profundidade máxima, critério, mínimo por folha |
 
 ### Árvore de decisão
+
 - Aprende perguntas do tipo **"atributo ≤ valor?"** que separam as classes.
 - É **interpretável**: dá para ler as condições (`export_text`).
 - As condições da árvore **vêm dos dados**. As regras do sistema especialista **vêm de humanos**.
@@ -172,6 +488,7 @@ L_URL = {`http://`, `https://`, `www.`} · Σ⁺
 > **Por que é determinístico?** Para cada estado e símbolo existe **exatamente uma** transição. As transições ausentes vão para `q_morto`.
 
 ### Expressões regulares do projeto (exemplos)
+
 - **Troca de número:** `(troquei|mudei) (de )?(numero|celular|chip)|numero novo|celular (quebrou|caiu)…`
 - **Pedido de código:** `codigo de verificacao|(mand|pass|envi)\w* o codigo|token|senha do banco`
 - **Pedido de dinheiro:** verbo de pedido (`empresta`, `faz`, `pague`…) seguido, na mesma frase, de algo monetário (`pix`, `boleto`, `R$`…). Por isso **"já fiz o pix"** **não** é um pedido.
@@ -179,6 +496,8 @@ L_URL = {`http://`, `https://`, `www.`} · Σ⁺
 ---
 
 ## 6. As 18 regras (resumo)
+
+> A explicação de cada regra, uma por uma e com exemplos, está na **Parte 0.6**. Aqui fica só o resumo para revisar.
 
 | Grupo | Regras | O que fazem |
 |---|---|---|
@@ -275,6 +594,21 @@ O "tom" de engenharia social, como pressão emocional e intimidade falsa. Usamos
 
 **22. Por que a R10 exige "sinal de risco"?**
 Porque todo golpe precisa de um vetor: link, pedido de dinheiro ou código. Se o modelo desconfia mas não há vetor, a R11 manda **verificar** em vez de bloquear. Isso evita bloquear uma mensagem legítima de um número novo.
+
+**23. O que é o fato `sinal_risco` e de onde ele vem?**
+É um **fato derivado**, que não vem do texto nem do usuário: é criado por regras. A R03 (tem link) e a R04 (pede dinheiro) anotam `sinal_risco = sim`. A R05 (sem link e sem pedido) anota `sinal_risco = não`. Depois as regras R10, R11, R17 e R18 usam esse fato. Isso é **encadeamento**.
+
+**24. Se a mensagem tem link E pede dinheiro, a R03 e a R04 disparam?**
+Só a R03 dispara, porque vem primeiro na base. A R04 anotaria a mesma coisa (`sinal_risco = sim`) e não traria informação nova. Isso é a **refração**.
+
+**25. No golpe do falso parente, por que o sistema pergunta sobre a ligação e não sobre o contato salvo?**
+Porque o motor pergunta o que a regra de **maior prioridade** precisa. A R07 (prioridade 90) precisa de `confirmou_por_ligacao`. As regras que usam `contato_salvo` têm prioridade 50, então nem chegam a ser consultadas.
+
+**26. Qual a diferença entre o palpite do modelo e a decisão do sistema?**
+O palpite (`previsao`) é só **um fato** entre vários. A **decisão** (`acao`) sai das regras, que juntam o palpite com as pistas do texto e as respostas do usuário. Por isso a mesma previsão "spam" pode virar SILENCIAR (R13) ou ARQUIVAR (R14).
+
+**27. O que significa "proporção na folha: 100%"?**
+É a porcentagem de exemplos de treino daquela folha da árvore que eram da classe prevista. **Não** é uma probabilidade garantida de acerto (a Aula 12 alerta sobre isso).
 
 ---
 
