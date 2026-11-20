@@ -1,6 +1,6 @@
 **UDF** Centro Universitário
 
-Projeto final · Inteligência Artificial e LFA · Profa. Kadidja Valéria
+Projeto final · Inteligência Artificial e LFA · 
 
 # Ética e Impactos da Inteligência Artificial: Sentinela Zap
 
