@@ -40,7 +40,10 @@ Projeto_Final_Sentinela_Zap/
 │   └── mensagens_whatsapp.csv                 ← o banco de dados: 150 mensagens rotuladas
 ├── GUIA_DE_ESTUDO.md                          ← guia de estudo: o sistema explicado do zero, regra por regra
 ├── GUIA_DE_ESTUDO.html                        ← o mesmo guia em página web
-└── GUIA_DE_ESTUDO.pdf                         ← o mesmo guia pronto para imprimir (15 páginas)
+├── GUIA_DE_ESTUDO.pdf                         ← o mesmo guia pronto para imprimir (15 páginas)
+├── ETICA_E_IMPACTOS_IA.md                     ← análise ética e declaração de uso de IA
+├── ETICA_E_IMPACTOS_IA.pdf                    ← a mesma análise no formato do roteiro da aula (para entregar)
+└── ETICA_E_IMPACTOS_IA.html                   ← a mesma análise em página web
 ```
 
 | Arquivo | Para que serve | Quando abrir |
@@ -50,6 +53,8 @@ Projeto_Final_Sentinela_Zap/
 | **`GUIA_DE_ESTUDO.md`** | A **Parte 0** explica o sistema do zero: as 3 etapas, as 14 pistas, as 2 perguntas, **cada uma das 18 regras** com exemplo e o passo a passo real de uma mensagem, ciclo por ciclo. As seções 1 a 10 ligam cada conceito das aulas ao projeto e trazem números para decorar, 27 perguntas prováveis com resposta e um roteiro de apresentação. | Para **estudar** e para **explicar** o projeto. |
 | **`GUIA_DE_ESTUDO.html`** | O mesmo guia em página web. | Para ler no navegador. |
 | **`GUIA_DE_ESTUDO.pdf`** | O mesmo guia pronto para imprimir: Parte 0 nas páginas 1 a 7 e a teoria nas páginas 8 a 15. | Para **imprimir**. |
+| **`ETICA_E_IMPACTOS_IA.pdf`** | **Ética e impactos da IA**, no formato do roteiro da aula de 17/11: leitura e vídeo, análise dos 5 aspectos (privacidade, viés, transparência, supervisão e impacto social) com situações reais do teste, o dilema "bloquear e denunciar × alertar", a reflexão individual e a **declaração de uso de IA** (IA incorporada ao projeto e IA usada na elaboração). | Para **entregar** e para responder perguntas sobre ética. |
+| **`ETICA_E_IMPACTOS_IA.md`** / **`.html`** | A mesma análise em texto (lido direto no GitHub) e em página web. | Para ler no GitHub ou no navegador. |
 
 ---
 
@@ -178,6 +183,7 @@ Os números abaixo são do conjunto de teste, que o modelo nunca viu durante o t
 | Comparação mudando um único fato | 14 |
 | Verificação e validação da base | 15 e 16 |
 | Erros, limitações e representatividade | 18 e 19 |
+| Ética e impactos da IA e declaração de uso de IA (aula de 17/11) | Arquivo `ETICA_E_IMPACTOS_IA.pdf` |
 
 ## 5. Limitações
 
