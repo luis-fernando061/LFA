@@ -14,6 +14,7 @@ Atividades da disciplina de **Linguagens Formais e Autômatos / Inteligência Ar
 
 - 📂 Pasta: [`Projeto_Final_Sentinela_Zap`](Projeto_Final_Sentinela_Zap). O README da pasta explica cada arquivo e cada seção do notebook.
 - ▶️ Para testar: clique em **Abrir no Colab** acima e depois em **Ambiente de execução → Executar tudo**.
+- ⚖️ Ética e impactos da IA: [`ETICA_E_IMPACTOS_IA.pdf`](Projeto_Final_Sentinela_Zap/ETICA_E_IMPACTOS_IA.pdf), com a análise ética do sistema e a declaração de uso de IA.
 
 ---
 
@@ -31,7 +32,7 @@ Em ordem de conteúdo da disciplina:
 | 6 | [`atividade_maquina_de_turing`](atividade_maquina_de_turing) | Máquinas de Turing | Atividade e 3 testes: entradas aceitas `0011` e `000111`, entrada rejeitada `00111` |
 | 7 | [`ATIVIDADE REMOTA — MÁQUINAS DE TURING`](<ATIVIDADE REMOTA — MÁQUINAS DE TURING>) | Máquinas de Turing (atividade remota) | Mesma atividade entregue na modalidade remota, com respostas e os 3 testes em PDF |
 | 8 | [`Atividade_Agentes_Inteligentes`](Atividade_Agentes_Inteligentes) | Agentes inteligentes (IA) | Exercícios 2.3, 2.4 e 2.5 do Capítulo 2: racionalidade, ambientes de tarefa e modelo PEAS |
-| 9 | [`Projeto_Final_Sentinela_Zap`](Projeto_Final_Sentinela_Zap) | **Projeto final**: sistemas especialistas e aprendizado de máquina (Aulas 12 e 13) | Notebook para o Colab, dataset com 150 mensagens, README e guia de estudo |
+| 9 | [`Projeto_Final_Sentinela_Zap`](Projeto_Final_Sentinela_Zap) | **Projeto final**: sistemas especialistas e aprendizado de máquina (Aulas 12 e 13) | Notebook para o Colab, dataset com 150 mensagens, README, guia de estudo e análise ética com declaração de uso de IA |
 
 ---
 
