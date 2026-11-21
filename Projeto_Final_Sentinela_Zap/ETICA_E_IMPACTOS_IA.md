@@ -177,8 +177,7 @@ O projeto utiliza **um sistema especialista com 18 regras SE…ENTÃO e motor de
 
 ### IA utilizada na elaboração do trabalho
 
-Utilizei **o Claude (Anthropic, modelo Claude Opus 5.5) como assistente durante o projeto** para **me ajudar a pensar a estratégia e a arquitetura do sistema, escrever partes do código em Python, criar as mensagens simuladas do dataset e redigir e revisar partes dos textos da documentação e desta análise**. Aproveitei **essas sugestões** após **revisar as 18 regras uma a uma, rodar o notebook completo no Google Colab, conferir os testes e os números e corrigir o que não funcionava, como na criação da regra R11 e do atributo de pedido de dinheiro. Também li o resumo do artigo e assisti ao trecho do vídeo citados na seção 1**. Assumo a responsabilidade pelas escolhas, verificações e conteúdo da entrega.
-
+Utilizei **o Claude (Anthropic, modelo Claude Opus 5.5) como assistente durante o projeto** para **me ajudar a pensar a estratégia e a arquitetura do sistema, escrever partes do código em Python, criar as mensagens simuladas do dataset e redigir e revisar partes dos textos da documentação e desta análise**. Aproveitei **essas sugestões** após **revisar as 18 regras uma a uma, rodar o notebook completo no Google Colab, conferir os testes e os números e corrigir o que não funcionava, como na criação da regra R11 e do atributo de pedido de dinheiro. Também li o resumo do artigo e assisti ao trecho do vídeo citados na seção 1**. 
 ---
 
 ## Referências
