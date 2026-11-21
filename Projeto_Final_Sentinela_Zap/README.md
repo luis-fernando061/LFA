@@ -39,7 +39,7 @@ Projeto_Final_Sentinela_Zap/
 ├── data/
 │   └── mensagens_whatsapp.csv                 ← o banco de dados: 150 mensagens rotuladas
 ├── GUIA_DE_ESTUDO.md                          ← guia de estudo: o sistema explicado do zero, regra por regra
-├── GUIA_DE_ESTUDO.pdf                         ← o mesmo guia pronto para imprimir (15 páginas)
+├── GUIA_DE_ESTUDO.pdf                         ← o mesmo guia pronto para imprimir (17 páginas)
 └── ETICA_E_IMPACTOS_IA.md                     ← análise ética e declaração de uso de IA
 ```
 
@@ -47,8 +47,8 @@ Projeto_Final_Sentinela_Zap/
 |---|---|---|
 | **`Sentinela_Zap_Sistema_Especialista.ipynb`** | É o projeto inteiro. Tem a dor, o dataset, o autômato, o treino do modelo, as 18 regras, o motor de inferência, os testes e as limitações, tudo explicado em texto entre as células de código. | Para **executar e avaliar** o sistema. O GitHub mostra o notebook com as saídas mesmo sem executar. |
 | **`data/mensagens_whatsapp.csv`** | O dataset: 150 mensagens **simuladas** (50 legítimas, 50 spam, 50 golpe) com as colunas `id`, `mensagem` e `rotulo`. | Para ver os dados usados no treino e no teste. É o mesmo conteúdo embutido no notebook. |
-| **`GUIA_DE_ESTUDO.md`** | A **Parte 0** explica o sistema do zero: as 3 etapas, as 14 pistas, as 2 perguntas, **cada uma das 18 regras** com exemplo e o passo a passo real de uma mensagem, ciclo por ciclo. As seções 1 a 10 ligam cada conceito das aulas ao projeto e trazem números para decorar, 27 perguntas prováveis com resposta e um roteiro de apresentação. | Para **estudar** e para **explicar** o projeto. |
-| **`GUIA_DE_ESTUDO.pdf`** | O mesmo guia pronto para imprimir: Parte 0 nas páginas 1 a 7 e a teoria nas páginas 8 a 15. | Para **imprimir**. |
+| **`GUIA_DE_ESTUDO.md`** | A **Parte 0** explica o sistema do zero: as 3 etapas, as 14 pistas, as 2 perguntas, **cada uma das 18 regras** com exemplo e o passo a passo real de uma mensagem, ciclo por ciclo. As seções 1 a 10 ligam cada conceito das aulas ao projeto e trazem números para decorar, perguntas prováveis com resposta e um roteiro de apresentação. A seção 11 resume a ética (aula de 17/11) e a seção 12 traz a ficha de avaliação. São 32 perguntas com resposta no total. | Para **estudar** e para **explicar** o projeto. |
+| **`GUIA_DE_ESTUDO.pdf`** | O mesmo guia pronto para imprimir: Parte 0 nas páginas 1 a 7, a teoria nas páginas 8 a 15 e a ética e a ficha de avaliação nas páginas 16 e 17. | Para **imprimir**. |
 | **`ETICA_E_IMPACTOS_IA.md`** | **Ética e impactos da IA**, no formato do roteiro da aula de 17/11: leitura e vídeo, análise dos 5 aspectos (privacidade, viés, transparência, supervisão e impacto social) com situações reais do teste, o dilema "bloquear e denunciar × alertar", a reflexão individual e a **declaração de uso de IA** (IA incorporada ao projeto e IA usada na elaboração). | Para **ler direto no GitHub** e para responder perguntas sobre ética. |
 
 ---

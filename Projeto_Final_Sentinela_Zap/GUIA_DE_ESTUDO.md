@@ -2,7 +2,9 @@
 
 > Resumo para **estudar e explicar o projeto na prova**. Cada conceito das Aulas 12 e 13 aparece ligado a **onde ele está no nosso projeto**.
 >
-> **Como estudar:** leia primeiro a **Parte 0**, que explica o sistema do zero, como para uma criança. Depois passe para as seções 1 a 10, que trazem os nomes técnicos que a professora vai cobrar.
+> **Como estudar:** leia primeiro a **Parte 0**, que explica o sistema do zero, como para uma criança. Depois passe para as seções 1 a 10, que trazem os nomes técnicos que a professora vai cobrar. A **seção 11** cobre a aula de ética (17/11) e a **seção 12** traz o que você preencheu na ficha de avaliação.
+>
+> **Prova A1: 24/11/2026.**
 
 ---
 
@@ -523,6 +525,8 @@ L_URL = {`http://`, `https://`, `www.`} · Σ⁺
 | Golpes liberados | **0** |
 | Legítimas bloqueadas | **0** |
 | Combinações verificadas | **432** |
+| Erros reais usados na análise ética | **4 de 12** golpes de investimento viram spam · **1** mensagem de aula com link vira spam |
+| Trecho do vídeo (ética) | **06:07 a 06:58**, Steven Gouveia, IEA-USP |
 | Dor | 2,26 mi estelionatos (2025) · 84% via apps de mensagem · 26,3 mi vítimas |
 
 ---
@@ -631,3 +635,82 @@ O palpite (`previsao`) é só **um fato** entre vários. A **decisão** (`acao`)
 - **Estratificação:** manter a proporção das classes no treino e no teste.
 - **Folha da árvore:** ponto final onde a árvore decide a classe. A "proporção na folha" **não** é uma probabilidade calibrada.
 - **Falso positivo:** legítima tratada como golpe. **Falso negativo:** golpe tratado como legítima, o erro mais perigoso aqui.
+
+---
+
+## 11. Ética e impactos da IA (aula de 17/11)
+
+> Arquivo completo no GitHub: `ETICA_E_IMPACTOS_IA.md`. Aqui fica o resumo para a prova.
+
+### 11.1 O que vem das regras e o que depende do modelo
+
+- **Só regras da equipe** (R01–R09): falso parente e clonagem. Valem **mesmo se o modelo errar**. Exemplo: o modelo chamou o pedido de token de *legítima* e a R02 + R06 bloquearam.
+- **Dependem da previsão do modelo** (R10–R18): é aqui que entram os erros e vieses do dataset.
+
+### 11.2 Os 5 aspectos éticos (decore um exemplo real de cada)
+
+| Aspecto | Risco real no Sentinela Zap | Medida |
+|---|---|---|
+| **Privacidade e dados** | A mensagem colada pode ter **CPF, chave Pix e nomes** de terceiros | Não grava nada, só 2 perguntas, dataset 100% simulado. Proposta: avisar para apagar dados antes de colar |
+| **Viés e equidade** | Mensagem de **professor com link** da aula → SILENCIAR E DENUNCIAR SPAM. *"Mãe, vou chegar mais tarde"* → o modelo diz golpe | A **R11** impede o bloqueio sem sinal de risco. Proposta: testar **pares contrafactuais** (formal × informal) |
+| **Transparência** | "Proporção na folha: 100%" pode parecer **certeza** | A saída separa previsão do modelo, fatos e rastro, com "Como?", "Por quê?" e o aviso final |
+| **Supervisão e responsabilidade** | **4 golpes de investimento** ("Invista R$ 200…") viram spam e, de contato salvo, recebem **ARQUIVAR**, porque "invista" não está na lista | A **pessoa decide** (o sistema não age sozinho), há INCONCLUSIVO e "não sei". Proposta: incluir verbos de investimento |
+| **Impacto social** | O filho que teve o **celular roubado de verdade** → a mãe não consegue ligar → a R07 manda BLOQUEAR E DENUNCIAR | A R07 é **condicional** ("se não for ela…"), a R09 manda NÃO PAGAR AINDA e a R08 libera com cautela |
+
+### 11.3 O dilema: bloquear e denunciar × alertar
+
+| | Opção A: bloquear e denunciar já | Opção B: não pagar e bloquear; denunciar **depois** de confirmar |
+|---|---|---|
+| **Bom** | Proteção máxima e derruba números de golpistas | Evita denúncia injusta contra parente, professor ou comerciante |
+| **Ruim** | Erro do modelo vira **acusação** contra quem não pode se defender | O golpista fica ativo por mais tempo |
+
+**Sua posição:** manter a separação entre regras e modelo e a R09. Mudar a denúncia para **depois da verificação**, porque **quem é denunciado não usa o sistema e não pode contestar**.
+
+### 11.4 Artigo e vídeo (as duas fontes da aula)
+
+- **Artigo:** LACERDA JÚNIOR (2026), *Da proibição à governança*, Revista Foco. O debate saiu da "fraude" para **políticas graduadas**: o uso é permitido conforme a finalidade, a **declaração de uso** e a **responsabilização humana**. Proibir tudo orienta mal, e liberar sem critério joga o risco no aluno e no professor. A matriz tem 5 movimentos: **definir, ensinar, redesenhar, proteger e acompanhar**.
+- **Vídeo:** IEA-USP, *O Estado da Arte em Ética na IA* (9/6/2026), **Steven Gouveia, de 06:07 a 06:58**. Ele conclui que a ética entra **desde o primeiro traço** do sistema, e não como acabamento.
+
+| Nível | O que é | No Sentinela Zap |
+|---|---|---|
+| **Micro** | O sistema é exato, justo, transparente? | 0 golpes liberados, 432 combinações verificadas |
+| **Meso** | As **instituições e os incentivos** | A plataforma que recebe a denúncia e pode restringir números |
+| **Macro** | Como ficam **agência, conhecimento e responsabilidade** | Quem responde por uma denúncia injusta? |
+
+### 11.5 Declaração de uso de IA (dois campos do modelo da professora)
+
+- **IA incorporada ao projeto:** árvore de decisão + 18 regras + AFD e regex. Recebe o texto e 2 respostas, gera ação, recomendação e explicação. Verificada com testes, validação cruzada e as 432 combinações. A revisão cabe à pessoa usuária e ao autor.
+- **IA utilizada na elaboração:** o Claude ajudou na estratégia, em partes do código, nas mensagens simuladas e nos textos. Você revisou as regras, rodou no Colab, conferiu os números e as fontes. **Declarar o uso** é exatamente o que o artigo defende.
+
+### 11.6 Perguntas prováveis de ética
+
+**28. Seu sistema pode prejudicar alguém? Dê um exemplo.**
+Sim. Uma mensagem legítima de professor com link, vinda de número desconhecido, recebeu SILENCIAR E DENUNCIAR SPAM. Uma denúncia injusta pode restringir o número de quem só estava trabalhando.
+
+**29. Quem é responsável se a recomendação estiver errada?**
+A decisão final é da pessoa usuária, porque o sistema só recomenda. As regras são responsabilidade do autor, como engenheiro do conhecimento, que deve revisá-las. Para uso real, elas seriam validadas por especialistas antifraude.
+
+**30. Que dados o sistema usa? Dá para usar menos?**
+O texto colado e 2 respostas. O modelo usa só 14 contagens, não o texto em si, então o texto nem precisaria ser guardado. Nada é gravado e o dataset é simulado.
+
+**31. Como o usuário sabe que recebeu uma saída de IA?**
+A saída mostra separado o que é **previsão do modelo**, o que são **fatos do texto** e quais **regras dispararam**, com a explicação "Como?" e o aviso de que a decisão é humana.
+
+**32. O que são os níveis micro, meso e macro?**
+São os níveis da fala de Steven Gouveia no vídeo do IEA-USP. **Micro** é o sistema em si (exato, justo, transparente). **Meso** são as instituições e os incentivos, como a plataforma que recebe a denúncia. **Macro** é como mudam agência, conhecimento e responsabilidade.
+
+---
+
+## 12. Ficha de avaliação A1 (o que você preencheu)
+
+**Descrição do SE:** sistema especialista híbrido que ajuda a decidir o que fazer com uma mensagem suspeita de WhatsApp. Fatos de entrada (s/n/?): `troca_numero`, `pede_dinheiro`, `pede_codigo`, `tem_link` (AFD + regex), `previsao` (árvore) e as perguntas `contato_salvo` e `confirmou_por_ligacao`. Caso: *"Oi mãe, troquei de número, me faz um pix"* + não confirmou → **BLOQUEAR E DENUNCIAR**.
+
+**Base de conhecimento (2 regras):**
+
+- **R01:** SE `troca_numero` = sim E `pede_dinheiro` = sim ENTÃO `padrao_falso_parente` = sim.
+- **R07:** SE `padrao_falso_parente` = sim E `confirmou_por_ligacao` = não ENTÃO ação = BLOQUEAR E DENUNCIAR.
+
+**Motor de inferência:** encadeamento para frente com prioridade (100 → 95 → 90 → 50). Os fatos acionam a R01. Para aplicar a R07, o motor pergunta a confirmação ("Por quê? A R07 precisa desse fato"). Com "não", conclui BLOQUEAR. O motor registra o rastro e preserva o "?" como desconhecido, e nesse caso a R09 recomenda NÃO PAGAR AINDA.
+
+> **Se ela perguntar sobre encadeamento para trás** (o exemplo da ficha usa esse termo): *"O motor é para frente, mas só pergunta ao usuário o fato de que uma regra precisa. Partir da regra para descobrir o fato que falta é um comportamento de encadeamento para trás."*
+
