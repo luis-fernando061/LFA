@@ -14,7 +14,7 @@ Atividades da disciplina de **Linguagens Formais e Autômatos / Inteligência Ar
 
 - 📂 Pasta: [`Projeto_Final_Sentinela_Zap`](Projeto_Final_Sentinela_Zap). O README da pasta explica cada arquivo e cada seção do notebook.
 - ▶️ Para testar: clique em **Abrir no Colab** acima e depois em **Ambiente de execução → Executar tudo**.
-- ⚖️ Ética e impactos da IA: [`ETICA_E_IMPACTOS_IA.pdf`](Projeto_Final_Sentinela_Zap/ETICA_E_IMPACTOS_IA.pdf), com a análise ética do sistema e a declaração de uso de IA.
+- ⚖️ Ética e impactos da IA: [`ETICA_E_IMPACTOS_IA.md`](Projeto_Final_Sentinela_Zap/ETICA_E_IMPACTOS_IA.md), com a análise ética do sistema e a declaração de uso de IA.
 
 ---
 
